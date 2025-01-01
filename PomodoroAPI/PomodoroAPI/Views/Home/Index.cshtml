@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model List<Achievement>
+
+@foreach (var ach in Model)
+{
+    <p>@ach.Title</p>
+    foreach (var user in ach.Uids)
+    {
+        <p>@user.UserName</p>
+    }
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
