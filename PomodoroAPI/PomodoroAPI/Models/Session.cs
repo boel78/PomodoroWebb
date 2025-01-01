@@ -12,4 +12,6 @@ public partial class Session
     public TimeOnly? TimeSpent { get; set; }
 
     public DateOnly? DateCreated { get; set; }
+
+    public virtual ICollection<User> Uids { get; set; } = new List<User>();
 }
