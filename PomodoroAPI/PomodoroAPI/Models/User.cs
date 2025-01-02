@@ -6,14 +6,10 @@ namespace PomodoroAPI.Models;
 
 public partial class User : IdentityUser
 {
-
-    
-    
     public int? Streak { get; set; }
 
     public string? Algoritmsetting { get; set; }
-
-   
+    
     public virtual ICollection<Achievement> Achievements { get; set; } = new List<Achievement>();
 
 
