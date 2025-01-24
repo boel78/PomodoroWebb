@@ -50,6 +50,8 @@ public class UserController : ControllerBase
         ServiceResponse<User> response = await _userRepository.UpdateUser(vm);
         if (response.Success)
         {
+            string messageEdit = response.Message.TrimStart(' ').Replace("_", " ").TrimEnd(',');
+            response.Message = messageEdit;
             return Ok(response);
         }
         return BadRequest(response);

@@ -131,12 +131,51 @@ public class UserRepository : IUserRepository
                await context.SaveChangesAsync();
                response.Data = user;
                response.Success = true;
-               response.Message = "Email updated";
+               response.Message += " Email_updated,";
            }
            else
            {
                response.Success = false;
                response.Message = "Email already exists";
+               return (response);
+           }
+       }
+       
+       //Byta lösenord
+       if (vm.NewPassword != null)
+       {
+           var result = await userManager.ChangePasswordAsync(user, vm.CurrentPassword, vm.NewPassword);
+           if (result.Succeeded)
+           {
+               response.Data = user;
+               response.Success = true;
+               response.Message += " Password_updated,";
+           }
+           else
+           {
+               response.Success = false;
+               response.Message = string.Join(", ", result.Errors.Select(e => e.Description));
+               return (response);
+           }
+       }
+       
+       //Byta algoritm
+       if (vm.NewAlgorithm != null)
+       {
+           if (vm.NewAlgorithm == "longer_break" || vm.NewAlgorithm == "shorter_break")
+           {
+               user.Algoritmsetting = vm.NewAlgorithm;
+               context.Update(user);
+               await context.SaveChangesAsync();
+               response.Data = user;
+               response.Success = true;
+               response.Message += " Algorithm_updated,";
+           }
+           else
+           {
+               response.Success = false;
+               response.Message = "Algorithm not supported";
+               return (response);
            }
        }
        
