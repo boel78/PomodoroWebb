@@ -63,7 +63,7 @@ public class UserRepository : IUserRepository
         else
         {
             response.Success = false;
-            response.Message = $"User creation failed: {string.Join(", ", result.Errors.Select(e => e.Description))}";
+            response.Message = string.Join(", ", result.Errors.Select(e => e.Description));
         }
 
         return response;
