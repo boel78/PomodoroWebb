@@ -43,5 +43,16 @@ public class UserController : ControllerBase
         }
         return BadRequest(response);
     }
+
+    [HttpPost("update")]
+    public async Task<IActionResult> Update([FromBody] UpdateUserViewModel vm)
+    {
+        ServiceResponse<User> response = await _userRepository.UpdateUser(vm);
+        if (response.Success)
+        {
+            return Ok(response);
+        }
+        return BadRequest(response);
+    }
     
 }

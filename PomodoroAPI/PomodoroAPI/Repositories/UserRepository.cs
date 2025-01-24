@@ -104,4 +104,43 @@ public class UserRepository : IUserRepository
 
         return response;
     }
+
+    public async Task<ServiceResponse<User>> UpdateUser(UpdateUserViewModel vm)
+    {
+        User user = await userManager.FindByNameAsync(vm.UserName);
+        var response = new ServiceResponse<User>();
+       /* password
+            email
+                
+                    algoritm*/
+       if (await userManager.FindByEmailAsync(user.Email) == null)
+       {
+           response.Success = false;
+           response.Message = "User does not exist";
+           return response;
+       }
+
+       //Byta email
+       if (vm.NewEmail != null)
+       {
+           if (await userManager.FindByEmailAsync(vm.NewEmail) == null)
+           {
+               user.Email = vm.NewEmail;
+               user.NormalizedEmail = vm.NewEmail.ToUpper();
+               context.Update(user);
+               await context.SaveChangesAsync();
+               response.Data = user;
+               response.Success = true;
+               response.Message = "Email updated";
+           }
+           else
+           {
+               response.Success = false;
+               response.Message = "Email already exists";
+           }
+       }
+       
+       
+       return response;
+    }
 }
