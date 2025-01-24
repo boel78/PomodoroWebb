@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PomodoroAPI.Interfaces;
 using PomodoroAPI.Models;
+using PomodoroAPI.Models.Viewmodels;
 
 namespace PomodoroAPI.Repositories;
 
@@ -18,10 +19,9 @@ public class UserRepository : IUserRepository
         signInManager = _signInManager;
         context = _context;
     }
-    public async Task<ServiceResponse<User>> AddUser(User user)
+    public async Task<ServiceResponse<User>> AddUser(User user, string password)
     {
         var response = new ServiceResponse<User>();
-
         //Om email redan finns
         if (await userManager.FindByEmailAsync(user.Email) != null)
         {
@@ -37,7 +37,7 @@ public class UserRepository : IUserRepository
             response.Message = "Username already exists";
             return response;
         }
-        var result = await userManager.CreateAsync(user);
+        var result = await userManager.CreateAsync(user, password);
 
         if (result.Succeeded)
         {
@@ -63,7 +63,43 @@ public class UserRepository : IUserRepository
         else
         {
             response.Success = false;
-            response.Message = "User creation failed";
+            response.Message = $"User creation failed: {string.Join(", ", result.Errors.Select(e => e.Description))}";
+        }
+
+        return response;
+    }
+
+    public async Task<ServiceResponse<User>> LoginUser(LoginViewModel vm)
+    {
+        var response = new ServiceResponse<User>();
+        
+        var user = await userManager.FindByNameAsync(vm.Username);
+        if (user == null)
+        {
+            response.Success = false;
+            response.Message = "User does not exist";
+            return response;
+        }
+        
+        var isPasswordValid = await userManager.CheckPasswordAsync(user, vm.Password);
+        if (!isPasswordValid)
+        {
+            response.Success = false;
+            response.Message = "Invalid password";
+            return response;
+        }
+        var result = await signInManager.PasswordSignInAsync(vm.Username, vm.Password, vm.RememberMe, false);
+
+        if (result.Succeeded)
+        {
+            response.Data = await userManager.FindByNameAsync(vm.Username);
+            response.Success = true;
+            response.Message = "User logged in";
+        }
+        else
+        {
+            response.Success = false;
+            response.Message = "Login failed";
         }
 
         return response;
