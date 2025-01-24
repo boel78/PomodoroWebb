@@ -22,6 +22,7 @@ public class UserRepository : IUserRepository
     {
         var response = new ServiceResponse<User>();
 
+        //Om email redan finns
         if (await userManager.FindByEmailAsync(user.Email) != null)
         {
             response.Success = false;
@@ -29,6 +30,7 @@ public class UserRepository : IUserRepository
             return response;
         }
         
+        //Om Username redan finns
         if (await userManager.FindByNameAsync(user.Email) != null)
         {
             response.Success = false;
@@ -39,8 +41,8 @@ public class UserRepository : IUserRepository
 
         if (result.Succeeded)
         {
+            //Ifall fler än 5 finns
             var userCount = context.Users.Count();
-
             if (userCount > 5)
             {
                 var oldestUser = await context.Users.OrderByDescending(x => x.Id).FirstOrDefaultAsync();
