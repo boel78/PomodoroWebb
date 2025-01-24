@@ -10,6 +10,8 @@ public partial class User : IdentityUser
 
     public string? Algoritmsetting { get; set; }
     
+    public DateTime LatestLoggedIn { get; set; }
+    
     public virtual ICollection<Achievement> Achievements { get; set; } = new List<Achievement>();
 
 

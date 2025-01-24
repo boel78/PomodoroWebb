@@ -95,6 +95,18 @@ public class UserRepository : IUserRepository
             response.Data = await userManager.FindByNameAsync(vm.Username);
             response.Success = true;
             response.Message = "User logged in";
+            if (user.LatestLoggedIn.Date != DateTime.Now.Date)
+            {
+                user.LatestLoggedIn = DateTime.Now;
+                if ((DateTime.Now.Date - user.LatestLoggedIn.Date).Days > 1)
+                {
+                    user.Streak = 0;
+                }
+                else if((DateTime.Now.Date - user.LatestLoggedIn.Date).Days == 1)
+                {
+                    await RaiseStreak(user);
+                }
+            }
         }
         else
         {
@@ -109,10 +121,6 @@ public class UserRepository : IUserRepository
     {
         User user = await userManager.FindByNameAsync(vm.UserName);
         var response = new ServiceResponse<User>();
-       /* password
-            email
-                
-                    algoritm*/
        if (await userManager.FindByEmailAsync(user.Email) == null)
        {
            response.Success = false;
@@ -181,5 +189,12 @@ public class UserRepository : IUserRepository
        
        
        return response;
+    }
+
+    private async Task RaiseStreak(User user)
+    {
+        user.Streak++;
+        context.Update(user);
+        await context.SaveChangesAsync();
     }
 }
