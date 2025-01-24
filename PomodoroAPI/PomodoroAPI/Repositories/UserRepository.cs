@@ -22,6 +22,7 @@ public class UserRepository : IUserRepository
     public async Task<ServiceResponse<User>> AddUser(User user, string password)
     {
         var response = new ServiceResponse<User>();
+        user.DateTimeCreated = DateTime.Now;
         //Om email redan finns
         if (await userManager.FindByEmailAsync(user.Email) != null)
         {
@@ -45,16 +46,15 @@ public class UserRepository : IUserRepository
             var userCount = context.Users.Count();
             if (userCount > 5)
             {
-                var oldestUser = await context.Users.OrderByDescending(x => x.Id).FirstOrDefaultAsync();
+                var oldestUser = await context.Users.OrderBy(x => x.DateTimeCreated).FirstOrDefaultAsync();
 
                 if (oldestUser != null)
                 {
+                    Console.WriteLine(oldestUser.Email);
                     context.Remove(oldestUser);
                     await context.SaveChangesAsync();
                 }
             }
-            
-            await signInManager.SignInAsync(user, false);
             
             response.Success = true;
             response.Message = "User created";
@@ -92,20 +92,24 @@ public class UserRepository : IUserRepository
 
         if (result.Succeeded)
         {
-            response.Data = await userManager.FindByNameAsync(vm.Username);
+            response.Data = user;
             response.Success = true;
             response.Message = "User logged in";
-            if (user.LatestLoggedIn.Date != DateTime.UtcNow.Date)
+
+            if (user.LatestLoggedIn.Date != DateTime.UtcNow)
             {
-                user.LatestLoggedIn = DateTime.UtcNow;
+                
                 if ((DateTime.UtcNow.Date - user.LatestLoggedIn.Date).Days > 1)
                 {
-                    user.Streak = 0;
+                    user.Streak = 1;
                 }
-                else if((DateTime.UtcNow.Date - user.LatestLoggedIn.Date).Days == 1)
+                else if ((DateTime.UtcNow.Date - user.LatestLoggedIn.Date).Days == 1)
                 {
                     await RaiseStreak(user);
                 }
+                user.LatestLoggedIn = DateTime.UtcNow;
+                context.Update(user);
+                await context.SaveChangesAsync();
             }
         }
         else
@@ -193,7 +197,14 @@ public class UserRepository : IUserRepository
 
     private async Task RaiseStreak(User user)
     {
-        user.Streak++;
+        if (user.Streak == null)
+        {
+            user.Streak = 1;
+        }
+        else
+        {
+            user.Streak++;
+        }
         context.Update(user);
         await context.SaveChangesAsync();
     }

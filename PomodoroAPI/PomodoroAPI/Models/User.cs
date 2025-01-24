@@ -12,6 +12,8 @@ public partial class User : IdentityUser
     
     public DateTime LatestLoggedIn { get; set; }
     
+    public DateTime DateTimeCreated { get; set; }
+    
     public virtual ICollection<Achievement> Achievements { get; set; } = new List<Achievement>();
 
 
