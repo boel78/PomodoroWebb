@@ -95,14 +95,14 @@ public class UserRepository : IUserRepository
             response.Data = await userManager.FindByNameAsync(vm.Username);
             response.Success = true;
             response.Message = "User logged in";
-            if (user.LatestLoggedIn.Date != DateTime.Now.Date)
+            if (user.LatestLoggedIn.Date != DateTime.UtcNow.Date)
             {
-                user.LatestLoggedIn = DateTime.Now;
-                if ((DateTime.Now.Date - user.LatestLoggedIn.Date).Days > 1)
+                user.LatestLoggedIn = DateTime.UtcNow;
+                if ((DateTime.UtcNow.Date - user.LatestLoggedIn.Date).Days > 1)
                 {
                     user.Streak = 0;
                 }
-                else if((DateTime.Now.Date - user.LatestLoggedIn.Date).Days == 1)
+                else if((DateTime.UtcNow.Date - user.LatestLoggedIn.Date).Days == 1)
                 {
                     await RaiseStreak(user);
                 }
