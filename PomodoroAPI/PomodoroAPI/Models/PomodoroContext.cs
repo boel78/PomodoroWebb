@@ -39,7 +39,7 @@ public partial class PomodoroContext : IdentityDbContext<User>
             entity.HasKey(e => e.Aid).HasName("PK__Achievme__DE508E2E6000B13C");
 
             entity.Property(e => e.Aid)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("aid");
             entity.Property(e => e.Description)
                 .HasMaxLength(200)
@@ -111,11 +111,11 @@ public partial class PomodoroContext : IdentityDbContext<User>
 
         modelBuilder.Entity<Session>(entity =>
         {
-            entity.HasKey(e => e.Sid).HasName("PK__Sessions__DDDFDD36EAD002F3");
+            entity.HasKey(e => e.id).HasName("PK__Sessions__DDDFDD36EAD002F3");
 
-            entity.Property(e => e.Sid)
-                .ValueGeneratedNever()
-                .HasColumnName("sid");
+            entity.Property(e => e.id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("id");
             entity.Property(e => e.DateCreated).HasColumnName("dateCreated");
             entity.Property(e => e.TimeSpent).HasColumnName("timeSpent");
             entity.Property(e => e.Type)

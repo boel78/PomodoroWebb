@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace PomodoroAPI.Models;
 
 public partial class Session
 {
-    public int Sid { get; set; }
+    public int id { get; set; }
 
     public string? Type { get; set; }
 
@@ -13,5 +14,6 @@ public partial class Session
 
     public DateOnly? DateCreated { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<User> Uids { get; set; } = new List<User>();
 }
