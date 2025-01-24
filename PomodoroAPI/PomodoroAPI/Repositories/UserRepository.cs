@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PomodoroAPI.Interfaces;
 using PomodoroAPI.Models;
 
@@ -38,6 +39,19 @@ public class UserRepository : IUserRepository
 
         if (result.Succeeded)
         {
+            var userCount = context.Users.Count();
+
+            if (userCount > 5)
+            {
+                var oldestUser = await context.Users.OrderByDescending(x => x.Id).FirstOrDefaultAsync();
+
+                if (oldestUser != null)
+                {
+                    context.Remove(oldestUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            
             await signInManager.SignInAsync(user, false);
             
             response.Success = true;
