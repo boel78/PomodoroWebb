@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PomodoroAPI.Interfaces;
 using PomodoroAPI.Models;
@@ -25,5 +26,12 @@ public class SessionController : ControllerBase
             return Ok(response);
         }
         return BadRequest(response);
+    }
+
+    [HttpGet("getSessionsByUserName/{username}")]
+    public async Task<IActionResult> GetSessionsByUserId(string username)
+    {
+        List<Session> sessions = await _sessionRepository.GetSessionsByUserName(username);
+        return Ok(sessions);
     }
 }

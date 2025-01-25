@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PomodoroAPI.Interfaces;
 using PomodoroAPI.Models;
 
@@ -26,5 +27,12 @@ public class SessionRepository : ISessionRepository
         response.Message = "Session added";
         response.Success = true;
         return response;
+    }
+
+    public async Task<List<Session>> GetSessionsByUserName(string username)
+    {
+        var user = await _userManager.FindByNameAsync(username);
+        var sessions = await _context.Sessions.Where(s => s.Uids.Contains(user)).ToListAsync();
+        return sessions;
     }
 }
