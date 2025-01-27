@@ -30,7 +30,7 @@ export default function Register(){
 
                 if(data.success){
                     toast.success(data.message)
-                    router.push("/")
+                    router.push("/pomodoro-session")
                 }
                 else{
                     toast.error(data.message, {
