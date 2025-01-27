@@ -18,6 +18,14 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<PomodoroContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost", builder =>
+        builder.WithOrigins("http://localhost:3000")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 var app = builder.Build();
 
 
@@ -33,6 +41,9 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors("AllowLocalhost");
+
 
 app.MapStaticAssets();
 app.MapControllers();
