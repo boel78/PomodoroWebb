@@ -4,6 +4,7 @@ import PreviousSession from "@/components/previous-session";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef} from "react";
 import { useUser } from "@/context/UserContext";
+import ConfirmCancel from "@/components/ConfirmCancel";
 
 export default function Pomodoro() {
   const totalTimeRef = useRef(0);
@@ -14,6 +15,7 @@ export default function Pomodoro() {
   const [pomodoroLength, setPomodoroLength] = useState(0);
   const [breakLength, setBreakLength] = useState(0);
   const [sessionType, setSessionType] = useState("")
+  const [showCancelWindow, setShowCancelWindow] = useState(false)
   const {user, userSessions} = useUser();
   const [isSessionsVisible, setIsSessionsVisible] = useState(true)
   const [isMounted, setIsMounted] = useState(false);
@@ -130,6 +132,8 @@ export default function Pomodoro() {
   },[pomodoroLength, breakLength])
 
   const handleSuccesfullSession = () => {
+    if(timerIsActive){setTimerIsActive(false)}
+    if(workedTimeRef.current != 0){
     let date = new Date(Date.now()).toISOString()
     const dates = date.split("T")
     date = dates[0]
@@ -141,7 +145,7 @@ export default function Pomodoro() {
       dateCreated: date
     }
     console.log(session);
-    
+  }
   }
 
   const handleSetSessionVisible = () => {
@@ -193,6 +197,8 @@ export default function Pomodoro() {
       </div>
       <div className="col-span-3 flex flex-col items-center pb-8 md:h-full mt-20">
         {timerIsActive ? (
+          <div>
+          {showCancelWindow && <ConfirmCancel setShowCancelWindow={setShowCancelWindow} handleSuccesfullSession={handleSuccesfullSession}/>}
            <div className="flex flex-col items-center gap-10">
              <h2>Total Time: {formatTime(totalTimeRef.current)}</h2>
             <div className="flex flex-col items-center gap-5">
@@ -200,7 +206,9 @@ export default function Pomodoro() {
               : <h2>Time for some rest!</h2>}
               
               <h2>Time left: {formatTime(timer)}</h2>
+              <Button variant={'outline'} className="bg-tomato-700 text-tomato-50" onClick={() => setShowCancelWindow(!showCancelWindow)}>Cancel</Button>
             </div>
+           </div>
            </div>
         ) : (
           <div className="flex flex-col items-center">
