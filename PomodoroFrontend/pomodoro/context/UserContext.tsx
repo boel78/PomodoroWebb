@@ -14,13 +14,13 @@ export const UserProvider = ({ children }) => {
     };
   const logout = () => setUser(null);
 
+  //Local storage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
   }, []);
-
   useEffect(() => {
     if (user) {      
       localStorage.setItem("user", JSON.stringify(user));
@@ -31,7 +31,7 @@ export const UserProvider = ({ children }) => {
   
 
   return (
-    <UserContext.Provider value={{ user, login, logout, userSessions }}>
+    <UserContext.Provider value={{ user, login, logout, userSessions, setUserSessions }}>
       {children}
     </UserContext.Provider>
   );

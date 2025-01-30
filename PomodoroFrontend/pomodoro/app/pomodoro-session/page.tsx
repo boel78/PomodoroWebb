@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef} from "react";
 import { useUser } from "@/context/UserContext";
 import ConfirmCancel from "@/components/ConfirmCancel";
+import { toast } from "react-toastify";
 
 export default function Pomodoro() {
   const totalTimeRef = useRef(0);
@@ -16,7 +17,7 @@ export default function Pomodoro() {
   const [breakLength, setBreakLength] = useState(0);
   const [sessionType, setSessionType] = useState("")
   const [showCancelWindow, setShowCancelWindow] = useState(false)
-  const {user, userSessions} = useUser();
+  const {user, userSessions, setUserSessions} = useUser();
   const [isSessionsVisible, setIsSessionsVisible] = useState(true)
   const [isMounted, setIsMounted] = useState(false);
 
@@ -131,20 +132,52 @@ export default function Pomodoro() {
     //setTimerIsActive(true);
   },[pomodoroLength, breakLength])
 
-  const handleSuccesfullSession = () => {
+  const handleSuccesfullSession = async () => {
     if(timerIsActive){setTimerIsActive(false)}
     if(workedTimeRef.current != 0){
     let date = new Date(Date.now()).toISOString()
     const dates = date.split("T")
     date = dates[0]
-    console.log(workedTimeRef.current);
     
     const session = {
       type: sessionType,
-      totalTime: formatTime(workedTimeRef.current),
+      timeSpent: formatTime(workedTimeRef.current),
       dateCreated: date
     }
     console.log(session);
+    try{
+      const response = await fetch('http://localhost:5239/api/Session/addSession', {
+        method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ userName: user.userName, session: session }),
+      })
+      const sessionData = await response.json();
+      
+      if(sessionData.success){
+        toast.success("Successfully added the new Session!")
+        //Hämta sessions
+        try{
+          const userSessionResponse = await fetch(`http://localhost:5239/api/Session/getSessionsByUsername/${user.userName}`, {
+            method: 'GET',
+          })
+          const userSessionData = await userSessionResponse.json()
+          setUserSessions(userSessionData)  
+        }
+        catch(error){
+          console.log(error.message);
+          
+        }
+      }
+      else{
+        toast.error(sessionData.message)
+      }
+    }
+    catch(error){
+      console.log(error.message);
+      
+    }
   }
   }
 
