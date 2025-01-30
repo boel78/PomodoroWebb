@@ -23,6 +23,7 @@ public class UserRepository : IUserRepository
     {
         var response = new ServiceResponse<User>();
         user.DateTimeCreated = DateTime.Now;
+        user.DidInitialSetup = false;
         //Om email redan finns
         if (await userManager.FindByEmailAsync(user.Email) != null)
         {
@@ -191,6 +192,39 @@ public class UserRepository : IUserRepository
                response.Message = "Algorithm not supported";
                return (response);
            }
+       }
+       
+       //Byta PrefferedTime
+       if (vm.PreferredTime != null)
+       {
+           user.PreferredPomodoro = vm.PreferredTime;
+           context.Update(user);
+           await context.SaveChangesAsync();
+           response.Data = user;
+           response.Success = true;
+           response.Message += " Preferred_Pomodoro_updated,";
+       }
+       
+       //Byta PrefferedBreak
+       if (vm.PreferredBreak != null)
+       {
+           user.PreferredBreak = vm.PreferredBreak;
+           context.Update(user);
+           await context.SaveChangesAsync();
+           response.Data = user;
+           response.Success = true;
+           response.Message += " Preferred_Break_updated,";
+       }
+       
+       //Byta InitialSetup
+       if (vm.DidInitialSetup != null)
+       {
+           user.DidInitialSetup = vm.DidInitialSetup;
+           context.Update(user);
+           await context.SaveChangesAsync();
+           response.Data = user;
+           response.Success = true;
+           response.Message += " Did_Initial_Setup_updated,";
        }
        
        

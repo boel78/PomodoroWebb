@@ -16,9 +16,6 @@ export default function Pomodoro() {
   const [sessionType, setSessionType] = useState("")
   const {user, userSessions} = useUser();
   const [isSessionsVisible, setIsSessionsVisible] = useState(true)
-  const preferedTime = "00:00:10";
-  const preferedBreak = "00:00:05";
-  const algoritmSetting = "longerBreak";
 
   useEffect(() => {
     if (!timerIsActive) return;
@@ -42,7 +39,6 @@ export default function Pomodoro() {
   
     return () => clearInterval(interval);
   }, [timerIsActive, pomodoroLength, breakLength, isPomodoro]);
-  
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600)
@@ -70,11 +66,11 @@ export default function Pomodoro() {
       totalhours * 3600 + totalminutes * 60 + totalseconds;
     totalTimeRef.current = totalTimeSeconds;
 
-    const [preferedhours, preferedminutes, preferedseconds] = preferedTime
+    const [preferedhours, preferedminutes, preferedseconds] = user.preferredPomodoro
       .split(":")
       .map(Number);
     const [preferedBreakhours, preferedBreakminutes, preferedBreakseconds] =
-      preferedBreak.split(":").map(Number);
+      user.preferredBreak.split(":").map(Number);
 
     const preferedTimeSeconds =
       preferedhours * 3600 + preferedminutes * 60 + preferedseconds;
@@ -92,16 +88,23 @@ export default function Pomodoro() {
 
     const time_per_setting = rest_time / amount_of_cycles;
 
-    if (algoritmSetting === "longerBreak") {
+    if (user.algoritmsetting === "longer_break") {
       setPomodoroLength(preferedTimeSeconds);
       setBreakLength(preferedBreakSeconds + time_per_setting);
+      
     } else {
       setPomodoroLength(preferedTimeSeconds + time_per_setting);
       setBreakLength(preferedBreakSeconds);
     }
-    setTimer(preferedTimeSeconds);
+
+    //setTimer(pomodoroLength);
     setTimerIsActive(true);
   };
+
+  useEffect(() => {
+    setTimer(pomodoroLength);
+    //setTimerIsActive(true);
+  },[pomodoroLength, breakLength])
 
   const handleSuccesfullSession = () => {
     let date = new Date(Date.now()).toISOString()

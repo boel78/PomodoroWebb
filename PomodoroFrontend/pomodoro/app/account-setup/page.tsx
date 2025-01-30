@@ -4,7 +4,7 @@ import { useState } from "react"
 export default function AccountSetup(){
 
         return(
-        <div>
+        <div className="bg-tomato-100 flex flex-col items-center justify-center h-dvh">
             <MultiStepForm />
         </div>
     )

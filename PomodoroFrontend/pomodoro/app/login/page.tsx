@@ -38,9 +38,14 @@ export default function Login(){
         },
           })
           const session = await sessionResponse.json();
-          if(session){
+          if(session){            
             login(data.data, session)
-            router.push("/pomodoro-session")
+            if(data.data.didInitialSetup === false){
+              router.push("/account-setup")
+            }
+            else{
+              router.push("/pomodoro-session")
+            }
           }
           
         }

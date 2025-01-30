@@ -8,7 +8,7 @@ type FormWrapperProps = {
 export function FormWrapper({ title, children }:FormWrapperProps){
     return(
         <>
-        <h2>{title}</h2>
+        <h2 className="text-center text-2xl font-semibold text-tomato-700">{title}</h2>
         <div>
             {children}
         </div>

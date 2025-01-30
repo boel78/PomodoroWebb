@@ -8,4 +8,7 @@ public class UpdateUserViewModel
     public string NewPassword { get; set; }
     public string NewEmail { get; set; }
     public string NewAlgorithm { get; set; }
+    public TimeOnly PreferredTime { get; set; }
+    public TimeOnly PreferredBreak { get; set; }
+    public bool DidInitialSetup { get; set; }
 }
