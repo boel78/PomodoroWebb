@@ -7,15 +7,20 @@ import { useUser } from "@/context/UserContext";
 
 export default function Pomodoro() {
   const totalTimeRef = useRef(0);
+  const workedTimeRef = useRef(0);
   const [isPomodoro, setIsPomodoro] = useState(true);
   const [timerIsActive, setTimerIsActive] = useState(false);
   const [timer, setTimer] = useState(0);
   const [pomodoroLength, setPomodoroLength] = useState(0);
   const [breakLength, setBreakLength] = useState(0);
-  const [workedTime, setWorkedTime] = useState(0)
   const [sessionType, setSessionType] = useState("")
   const {user, userSessions} = useUser();
   const [isSessionsVisible, setIsSessionsVisible] = useState(true)
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!timerIsActive) return;
@@ -24,7 +29,8 @@ export default function Pomodoro() {
       setTimer((prevTime) => {
         if (prevTime <= 1) {
           totalTimeRef.current -= isPomodoro ? pomodoroLength : breakLength;
-          if(isPomodoro){setWorkedTime((prev) => prev + pomodoroLength)}
+          
+          if(isPomodoro){workedTimeRef.current += pomodoroLength}
           setIsPomodoro((prevIsPomodoro) => !prevIsPomodoro);
   
           if (totalTimeRef.current <= 0) {
@@ -33,6 +39,10 @@ export default function Pomodoro() {
           }
           return isPomodoro ? breakLength : pomodoroLength;
         }
+        /*if (isPomodoro) {
+          setWorkedTime((prev) => prev + 1); 
+        }*/
+
         return prevTime - 1;
       });
     }, 1000);
@@ -55,7 +65,9 @@ export default function Pomodoro() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const payload = Object.fromEntries(formData);
-    const totalTime = payload.time + ":00";
+    const totalTime = "00:" + payload.time;
+    workedTimeRef.current = 0
+    setIsPomodoro(true)
     setSessionType(payload.type)
 
     const [totalhours, totalminutes, totalseconds] = totalTime
@@ -69,16 +81,27 @@ export default function Pomodoro() {
     const [preferedhours, preferedminutes, preferedseconds] = user.preferredPomodoro
       .split(":")
       .map(Number);
+    
+    
     const [preferedBreakhours, preferedBreakminutes, preferedBreakseconds] =
       user.preferredBreak.split(":").map(Number);
 
-    const preferedTimeSeconds =
+    let preferedTimeSeconds =
       preferedhours * 3600 + preferedminutes * 60 + preferedseconds;
 
-    const preferedBreakSeconds =
+    console.log(preferedTimeSeconds);
+    
+
+      let preferedBreakSeconds =
       preferedBreakhours * 3600 +
       preferedBreakminutes * 60 +
       preferedBreakseconds;
+
+      if(totalTimeSeconds <= preferedTimeSeconds){
+        preferedTimeSeconds = totalTimeSeconds
+        preferedBreakSeconds = 0
+      }
+    
 
     const cycle_length = preferedBreakSeconds + preferedTimeSeconds;
 
@@ -110,10 +133,11 @@ export default function Pomodoro() {
     let date = new Date(Date.now()).toISOString()
     const dates = date.split("T")
     date = dates[0]
+    console.log(workedTimeRef.current);
     
     const session = {
       type: sessionType,
-      totalTime: formatTime(workedTime),
+      totalTime: formatTime(workedTimeRef.current),
       dateCreated: date
     }
     console.log(session);
@@ -125,6 +149,29 @@ export default function Pomodoro() {
       setIsSessionsVisible(!isSessionsVisible)
     }
   }
+
+  //Säger åt användaren att deras sparningar kanske går förlorade
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (timerIsActive) {
+        const message = "You have an active session. Are you sure you want to leave?";
+        event.returnValue = message; 
+        return message; 
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+});
+
+  if (!isMounted) {
+    return <div className="flex flex-col items-center justify-center"><p>Loading...</p></div>; 
+  }
+
+  
 
   return (
     <div className="bg-tomato-50 flex flex-col-reverse justify-end md:grid md:grid-cols-4 md:h-screen overflow-y-auto h-dvh">
@@ -144,13 +191,17 @@ export default function Pomodoro() {
 }
         </div>
       </div>
-      <div className="col-span-3 flex flex-col items-center pb-8">
+      <div className="col-span-3 flex flex-col items-center pb-8 md:h-full mt-20">
         {timerIsActive ? (
-          <div>
-            <h2>{formatTime(workedTime)}</h2>
-            <h2>{formatTime(totalTimeRef.current)}</h2>
-            <h2>{formatTime(timer)}</h2>
-          </div>
+           <div className="flex flex-col items-center gap-10">
+             <h2>Total Time: {formatTime(totalTimeRef.current)}</h2>
+            <div className="flex flex-col items-center gap-5">
+              {isPomodoro ? <h2>Time to work!</h2>
+              : <h2>Time for some rest!</h2>}
+              
+              <h2>Time left: {formatTime(timer)}</h2>
+            </div>
+           </div>
         ) : (
           <div className="flex flex-col items-center">
             <h2 className="font-semibold text-tomato-700 text-3xl pt-6 pb-12">Welcome {user.userName}!</h2>
