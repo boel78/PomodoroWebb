@@ -10,6 +10,10 @@ public partial class User : IdentityUser
 
     public string? Algoritmsetting { get; set; }
     
+    public TimeOnly PreferredBreak {get; set;}
+    public TimeOnly PreferredPomodoro {get; set;}
+    public bool DidInitialSetup {get; set;}
+    
     public DateTime LatestLoggedIn { get; set; }
     
     public DateTime DateTimeCreated { get; set; }

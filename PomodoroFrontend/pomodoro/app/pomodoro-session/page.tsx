@@ -15,7 +15,7 @@ export default function Pomodoro() {
   const [workedTime, setWorkedTime] = useState(0)
   const [sessionType, setSessionType] = useState("")
   const {user, userSessions} = useUser();
-  const [isSessionsVisible, setIsSessionsVisible] = useState(false)
+  const [isSessionsVisible, setIsSessionsVisible] = useState(true)
   const preferedTime = "00:00:10";
   const preferedBreak = "00:00:05";
   const algoritmSetting = "longerBreak";
@@ -118,13 +118,15 @@ export default function Pomodoro() {
   }
 
   const handleSetSessionVisible = () => {
-    setIsSessionsVisible(!isSessionsVisible)
+    if(window.innerWidth < 500 ){
+      setIsSessionsVisible(!isSessionsVisible)
+    }
   }
 
   return (
     <div className="bg-tomato-50 flex flex-col-reverse justify-end md:grid md:grid-cols-4 md:h-screen overflow-y-auto h-dvh">
-      <div className="col-span-1 flex flex-col md:items-center shadow-lg bg-tomato-100 z-10 px-3 overflow-scroll">
-        <h3 className="font-semibold text-3xl text-tomato-700 text-center py-6" onClick={handleSetSessionVisible}>Previous sessions</h3>
+      <div className="col-span-1 flex flex-col md:items-center shadow-lg bg-tomato-100 z-10 px-3 overflow-scroll mt-auto md:mt-0">
+      <h3 className="font-semibold text-3xl text-tomato-700 text-center py-6" onClick={handleSetSessionVisible}>Previous sessions</h3>
         <div className={`flex flex-col gap-4 transition-all duration-300 overflow-scroll ${
             isSessionsVisible ? "max-h-screen" : "max-h-0"
           }`}> 
@@ -149,7 +151,7 @@ export default function Pomodoro() {
         ) : (
           <div className="flex flex-col items-center">
             <h2 className="font-semibold text-tomato-700 text-3xl pt-6 pb-12">Welcome {user.userName}!</h2>
-            <h3 className="text-tomato-500 text-xl">Create a new Session</h3>
+            <h3 className="text-tomato-500 text-xl">Start a new Session</h3>
             <form
               className="flex flex-col items-center gap-10 bg-tomato-100 rounded-md shadow-md p-4"
               onSubmit={handleNewSession}
