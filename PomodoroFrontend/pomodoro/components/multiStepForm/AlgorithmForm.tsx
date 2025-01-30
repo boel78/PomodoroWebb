@@ -1,8 +1,11 @@
 import { FormWrapper } from "./FormWrapper";
-export default function AlgorithmForm(){
+
+type UserFormProps = {
+    Algorithm: boolean
+}
+
+export default function AlgorithmForm({Algorithm}: UserFormProps){
     <FormWrapper title="How do you want your sessions?">
-        <div>
-            
-        </div>
+        <input/>
     </FormWrapper>
 }
