@@ -1,12 +1,17 @@
 "use client"
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button} from "@/components/ui/button"
 import InputWithLabel from "@/components/ui/input-with-label"
 import {toast} from 'react-toastify';
 import Link from 'next/link';
+import { useUser } from '@/context/UserContext';
+import { useRouter } from 'next/navigation';
 
 
 export default function Login(){
+
+  const router = useRouter();
+  const {login} = useUser()
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,7 +29,24 @@ export default function Login(){
       })
       const data = await response.json();
       if(data.success){
-        console.log(data)
+
+        try{
+          const sessionResponse = await fetch(`http://localhost:5239/api/Session/GetSessionsByUsername/${encodeURIComponent(payload.username)}`,{
+            method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+          })
+          const session = await sessionResponse.json();
+          if(session){
+            login(data.data, session)
+            router.push("/pomodoro-session")
+          }
+          
+        }
+        catch(error){
+          toast.error(error.message)
+        }
         toast.success(data.message)
       }
       else{

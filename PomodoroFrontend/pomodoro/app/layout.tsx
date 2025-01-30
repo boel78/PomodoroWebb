@@ -3,6 +3,7 @@ import "./globals.css";
 import { Inter } from "next/font/google"
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';  // Importera CSS här
+import { UserProvider } from "@/context/UserContext";
 
 
 
@@ -22,7 +23,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} antialiased`}
       >
-        {children}
+        <UserProvider>{children}</UserProvider>
         <ToastContainer position="bottom-left" autoClose={2000}/>
       </body>
     </html>

@@ -96,6 +96,8 @@ public class UserRepository : IUserRepository
             response.Success = true;
             response.Message = "User logged in";
 
+            
+            
             if (user.LatestLoggedIn.Date != DateTime.UtcNow)
             {
                 
