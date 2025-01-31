@@ -6,6 +6,7 @@ import { useState, useEffect, useRef} from "react";
 import { useUser } from "@/context/UserContext";
 import ConfirmCancel from "@/components/ConfirmCancel";
 import { toast } from "react-toastify";
+import LoginNav from "@/components/LoginNav";
 
 export default function Pomodoro() {
   const totalTimeRef = useRef(0);
@@ -211,8 +212,9 @@ export default function Pomodoro() {
   
 
   return (
-    <div className="bg-tomato-50 flex flex-col-reverse justify-end md:grid md:grid-cols-4 md:h-screen overflow-y-auto h-dvh">
-      <div className="col-span-1 flex flex-col md:items-center shadow-lg bg-tomato-100 z-10 px-3 overflow-scroll mt-auto md:mt-0">
+    <div className="bg-tomato-50 flex flex-col-reverse justify-end md:grid md:grid-cols-4 md:h-dvh overflow-y-auto md:overflow-hidden h-dvh">
+      <LoginNav/>
+      <div className="col-span-1 flex flex-col md:items-center shadow-lg bg-tomato-100 px-3 overflow-scroll mt-auto md:pt-12 h-dvh">
       <h3 className="font-semibold text-3xl text-tomato-700 text-center py-6" onClick={handleSetSessionVisible}>Previous sessions</h3>
         <div className={`flex flex-col gap-4 transition-all duration-300 overflow-scroll ${
             isSessionsVisible ? "max-h-screen" : "max-h-0"
