@@ -92,7 +92,7 @@ export default function Dashboard() {
           </div>
           <div className="bg-tomato-50 shadow-md rounded-md p-8 flex flex-col items-center gap-4 w-full h-full">
             <h3 className="font-semibold text-tomato-700 text-xl md:text-3xl">Achievements</h3>
-            <p>To be announced</p>
+            <p>To be announced..</p>
           </div>
         </div>
     </>

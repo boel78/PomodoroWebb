@@ -15,27 +15,18 @@ export default function LoginNavMobile() {
 
   return (
     <div className="flex flex-col justify-start gap-3 w-full bg-tomato-50 absolute z-0 pb-8 shadow-md md:hidden">
-      <Link href="/dashboard">
-        <Button variant={"outline"} className="bg-tomato-500 text-tomato-50">
-          Home
-        </Button>
-      </Link>
-      <Link href="/pomodoro-session">
-        {" "}
-        <Button variant={"outline"} className="bg-tomato-500 text-tomato-50">
-          Sessions
-        </Button>
-      </Link>
-      <Link href="/achievements">
-        <Button variant={"outline"} className="bg-tomato-500 text-tomato-50">
-          Achievements
-        </Button>
-      </Link>
-      <Link href="/profile">
-        <Button variant={"outline"} className="bg-tomato-500 text-tomato-50">
-          Profile
-        </Button>
-      </Link>
+      <Button variant={"outline"} className="bg-tomato-500 text-tomato-50">
+        <Link href="/dashboard" className="w-full">Home</Link>
+      </Button>
+      <Button variant={"outline"} className="bg-tomato-500 text-tomato-50">
+        <Link href="/pomodoro-session" className="w-full">Sessions</Link>
+      </Button>
+      <Button variant={"outline"} className="bg-tomato-500 text-tomato-50">
+        <Link href="/achievements" className="w-full">Achievements</Link>
+      </Button>
+      <Button variant={"outline"} className="bg-tomato-500 text-tomato-50">
+        <Link href="/profile" className="w-full">Profile</Link>
+      </Button>
       <Button
         className="bg-tomato-800 text-tomato-50 font-semibold"
         onClick={handleLogout}
