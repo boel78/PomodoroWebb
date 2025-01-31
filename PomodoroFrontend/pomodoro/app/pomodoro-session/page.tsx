@@ -163,7 +163,7 @@ export default function Pomodoro() {
             method: 'GET',
           })
           const userSessionData = await userSessionResponse.json()
-          setUserSessions(userSessionData)  
+          setUserSessions(userSessionData)
         }
         catch(error){
           console.log(error.message);

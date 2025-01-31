@@ -11,8 +11,15 @@ export const UserProvider = ({ children }) => {
   const login = (userData, sessionData) => {
     setUser(userData)
     setUserSessions(sessionData)  
+    
     };
   const logout = () => setUser(null);
+
+    useEffect(() => {
+      console.log(userSessions);
+      
+    },[userSessions])
+
 
   //Local storage
   useEffect(() => {
@@ -20,10 +27,17 @@ export const UserProvider = ({ children }) => {
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    const userSessionsls = localStorage.getItem("sessions");
+    if(userSessionsls){
+      setUserSessions(JSON.parse(userSessionsls))
+    }
   }, []);
   useEffect(() => {
     if (user) {      
       localStorage.setItem("user", JSON.stringify(user));
+      if(userSessions){
+        localStorage.setItem("sessions", JSON.stringify(userSessions));
+      }
     } else {
       localStorage.removeItem("user"); 
     }

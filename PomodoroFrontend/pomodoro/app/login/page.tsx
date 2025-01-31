@@ -44,7 +44,7 @@ export default function Login(){
               router.push("/account-setup")
             }
             else{
-              router.push("/pomodoro-session")
+              router.push("/dashboard")
             }
           }
           
