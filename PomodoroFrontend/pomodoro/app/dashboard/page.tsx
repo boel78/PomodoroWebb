@@ -1,6 +1,6 @@
 "use client";
 import { useUser } from "@/context/UserContext";
-import { log } from "console";
+import LoginNav from "@/components/LoginNav";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
@@ -48,7 +48,7 @@ export default function Dashboard() {
     }
   }, []);
 
-  //Hjälp funktion för formatering av tid
+  //Hjälpfunktion för formatering av tid
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600)
       .toString()
@@ -77,21 +77,24 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="bg-tomato-100 flex flex-col items-center h-dvh pt-20">
-      <h2 className="font-semibold text-tomato-700 text-3xl md:text-6xl">Your Dashboard</h2>
-      <div className="bg-tomato-50 shadow-md rounded-md p-8 my-16 flex flex-col items-center gap-4 md:w-1/3 w-full">
-        <h3 className="font-semibold text-tomato-700 text-xl md:text-3xl">
-          Weekly statistics
-        </h3>
-        <p>Total Pomodorotime: {formatTime(totalTime)}</p>
-        <p>Tasks completed: {tasksCompleted}</p>
-        {totalExtraTime > 0 && <p>Extra time worked: {formatTime(totalExtraTime)}</p>}
-        <p>Most popular type: {mostCommonType}</p>
-      </div>
-      <div className="bg-tomato-50 shadow-md rounded-md p-8 flex flex-col items-center gap-4 w-full h-full">
-        <h3 className="font-semibold text-tomato-700 text-xl md:text-3xl">Achievements</h3>
-        <p>To be announced</p>
-      </div>
-    </div>
+    <>
+        <LoginNav />
+        <div className="bg-tomato-100 flex flex-col items-center h-dvh pt-20">
+          <h2 className="font-semibold text-tomato-700 text-3xl md:text-6xl">Your Dashboard</h2>
+          <div className="bg-tomato-50 shadow-md rounded-md p-8 my-16 flex flex-col items-center gap-4 md:w-1/3 w-full">
+            <h3 className="font-semibold text-tomato-700 text-xl md:text-3xl">
+              Weekly statistics
+            </h3>
+            <p>Total Pomodorotime: {formatTime(totalTime)}</p>
+            <p>Tasks completed: {tasksCompleted}</p>
+            {totalExtraTime > 0 && <p>Extra time worked: {formatTime(totalExtraTime)}</p>}
+            <p>Most popular type: {mostCommonType}</p>
+          </div>
+          <div className="bg-tomato-50 shadow-md rounded-md p-8 flex flex-col items-center gap-4 w-full h-full">
+            <h3 className="font-semibold text-tomato-700 text-xl md:text-3xl">Achievements</h3>
+            <p>To be announced</p>
+          </div>
+        </div>
+    </>
   );
 }

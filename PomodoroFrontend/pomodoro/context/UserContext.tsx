@@ -13,10 +13,14 @@ export const UserProvider = ({ children }) => {
     setUserSessions(sessionData)  
     
     };
-  const logout = () => setUser(null);
+  const logout = () => {
+    setUser(null)
+    localStorage.removeItem("user")
+    localStorage.removeItem("sessions")
+  };
 
     useEffect(() => {
-      console.log(userSessions);
+
       
     },[userSessions])
 
