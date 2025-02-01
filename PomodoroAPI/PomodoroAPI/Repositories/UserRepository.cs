@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PomodoroAPI.Interfaces;
 using PomodoroAPI.Models;
 using PomodoroAPI.Models.Viewmodels;
@@ -126,6 +127,7 @@ public class UserRepository : IUserRepository
 
     public async Task<ServiceResponse<User>> UpdateUser(UpdateUserViewModel vm)
     {
+        
         User user = await userManager.FindByNameAsync(vm.UserName);
         var response = new ServiceResponse<User>();
        if (await userManager.FindByEmailAsync(user.Email) == null)
@@ -136,7 +138,7 @@ public class UserRepository : IUserRepository
        }
 
        //Byta email
-       if (vm.NewEmail != null)
+       if (!vm.NewEmail.IsNullOrEmpty())
        {
            if (await userManager.FindByEmailAsync(vm.NewEmail) == null)
            {
@@ -157,7 +159,7 @@ public class UserRepository : IUserRepository
        }
        
        //Byta lösenord
-       if (vm.NewPassword != null)
+       if (!vm.NewPassword.IsNullOrEmpty())
        {
            var result = await userManager.ChangePasswordAsync(user, vm.CurrentPassword, vm.NewPassword);
            if (result.Succeeded)
@@ -175,7 +177,7 @@ public class UserRepository : IUserRepository
        }
        
        //Byta algoritm
-       if (vm.NewAlgorithm != null)
+       if (!vm.NewAlgorithm.IsNullOrEmpty())
        {
            if (vm.NewAlgorithm == "longer_break" || vm.NewAlgorithm == "shorter_break")
            {
@@ -195,9 +197,10 @@ public class UserRepository : IUserRepository
        }
        
        //Byta PrefferedTime
-       if (vm.PreferredTime != null)
+       if (!vm.PreferredTime.IsNullOrEmpty())
        {
-           user.PreferredPomodoro = vm.PreferredTime;
+           
+           user.PreferredPomodoro = TimeOnly.Parse(vm.PreferredTime);
            context.Update(user);
            await context.SaveChangesAsync();
            response.Data = user;
@@ -206,9 +209,9 @@ public class UserRepository : IUserRepository
        }
        
        //Byta PrefferedBreak
-       if (vm.PreferredBreak != null)
+       if (!vm.PreferredBreak.IsNullOrEmpty())
        {
-           user.PreferredBreak = vm.PreferredBreak;
+           user.PreferredBreak = TimeOnly.Parse(vm.PreferredBreak);
            context.Update(user);
            await context.SaveChangesAsync();
            response.Data = user;
@@ -217,7 +220,7 @@ public class UserRepository : IUserRepository
        }
        
        //Byta InitialSetup
-       if (vm.DidInitialSetup != null)
+       if (vm.DidInitialSetup == true)
        {
            user.DidInitialSetup = vm.DidInitialSetup;
            context.Update(user);
