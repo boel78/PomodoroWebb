@@ -9,6 +9,7 @@ interface User {
   algoritmsetting: string;
   preferredBreak: string;
   preferredPomodoro: string;
+  streak: number;
   userName: string;
   id: string;
   email: string;

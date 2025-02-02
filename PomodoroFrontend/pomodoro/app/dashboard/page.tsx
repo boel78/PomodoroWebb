@@ -4,7 +4,7 @@ import LoginNav from "@/components/LoginNav";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
-  const { userSessions } = useUser();
+  const { userSessions, user } = useUser();
   const [totalTime, setTotalTime] = useState(0);
   const [tasksCompleted, setTasksCompleted] = useState(0);
   const [totalExtraTime, setTotalExtraTime] = useState(0);
@@ -13,6 +13,9 @@ export default function Dashboard() {
   useEffect(() => {
     if (userSessions) {
       const typeCount: { [key: string]: number } = {};
+      let totalExtraTimeAccum = 0;
+      let totalTimeAccum = 0;
+      let tasksCompletedAccum = 0;
 
       //Går igenom varje session
       userSessions.map((sessions) => {
@@ -24,25 +27,29 @@ export default function Dashboard() {
 
           const totalTimeSeconds =
             totalhours * 3600 + totalminutes * 60 + totalseconds;
-          setTotalTime((prev) => prev + totalTimeSeconds);
+          totalTimeAccum += totalTimeSeconds;
 
           //Formaterar extratid och sätter det
           const [totalExtrahours, totalExtraminutes, totalExtraseconds] =
             sessions.totalExtraTime.split(":").map(Number);
           const totalExtraTimeSeconds =
             totalExtrahours * 3600 + totalExtraminutes * 60 + totalExtraseconds;
-          setTotalExtraTime((prev) => prev + totalExtraTimeSeconds);
+          totalExtraTimeAccum += totalExtraTimeSeconds;
 
           //kollar totalTasks och vilken typ
-          setTasksCompleted((prev) => prev + sessions.tasksCompleted);
+          tasksCompletedAccum += sessions.tasksCompleted;
           typeCount[sessions.type] = (typeCount[sessions.type] || 0) + 1;
         }
       });
 
+      setTasksCompleted(tasksCompletedAccum);
+      setTotalExtraTime(totalExtraTimeAccum);
+      setTotalTime(totalTimeAccum);
+
       //Kollar mest använda typ
-      const mostCommonType = Object.keys(typeCount).reduce((a, b) =>
-        typeCount[a] > typeCount[b] ? a : b, ""
-      );
+      const mostCommonType = Object.keys(typeCount).length > 0
+  ? Object.keys(typeCount).reduce((a, b) => (typeCount[a] > typeCount[b] ? a : b))
+  : "No data";
 
       setMostCommonType(mostCommonType);
     }
@@ -85,6 +92,7 @@ export default function Dashboard() {
             <h3 className="font-semibold text-tomato-700 text-xl md:text-3xl">
               Weekly statistics
             </h3>
+            <p>Your Streak: {user?.streak}</p>
             <p>Total Pomodorotime: {formatTime(totalTime)}</p>
             <p>Tasks completed: {tasksCompleted}</p>
             {totalExtraTime > 0 && <p>Extra time worked: {formatTime(totalExtraTime)}</p>}
