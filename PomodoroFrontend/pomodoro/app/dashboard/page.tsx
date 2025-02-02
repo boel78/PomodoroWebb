@@ -12,13 +12,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (userSessions) {
-      const typeCount = {};
+      const typeCount: { [key: string]: number } = {};
 
       //Går igenom varje session
       userSessions.map((sessions) => {
         if (isDateInCurrentWeek(sessions.dateCreated)) {
           //Formaterar totalTid till sekunder och sätter det
-          const [totalhours, totalminutes, totalseconds] = sessions.timeSpent
+          const [totalhours, totalminutes, totalseconds] = String(sessions.timeSpent)
             .split(":")
             .map(Number);
 
@@ -49,7 +49,7 @@ export default function Dashboard() {
   }, [userSessions]);
 
   //Hjälpfunktion för formatering av tid
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
       .toString()
       .padStart(2, "0");
@@ -60,7 +60,7 @@ export default function Dashboard() {
     return `${hours}:${minutes}:${secs}`;
   };
   //Hjälpfunktion för veckocheck
-  function isDateInCurrentWeek(dateString) {
+  function isDateInCurrentWeek(dateString: string) {
     const date = new Date(dateString);
     const now = new Date();
 

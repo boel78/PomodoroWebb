@@ -35,45 +35,55 @@ export default function Pomodoro() {
     
     const session = {
       type: sessionType,
-      timeSpent: formatTime(workedTimeRef.current),
+      timeSpent: Number(workedTimeRef.current),
       dateCreated: date
     }
     console.log(session);
-    try{
-      const response = await fetch('https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/addSession', {
-        method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({ userName: user.userName, session: session }),
-      })
-      const sessionData = await response.json();
-      
-      if(sessionData.success){
-        toast.success("Successfully added the new Session!")
-        //Hämta sessions
-        try{
-          const userSessionResponse = await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/getSessionsByUsername/${user.userName}`, {
-            method: 'GET',
-          })
-          const userSessionData = await userSessionResponse.json()
-          setUserSessions(userSessionData)
+    if (user) {
+      try {
+        const response = await fetch('https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/addSession', {
+          method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userName: user.userName, session: session }),
+        })
+        const sessionData = await response.json();
+        
+        if(sessionData.success){
+          toast.success("Successfully added the new Session!")
+          //Hämta sessions
+          try{
+            const userSessionResponse = await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/getSessionsByUsername/${user.userName}`, {
+              method: 'GET',
+            })
+            const userSessionData = await userSessionResponse.json()
+            setUserSessions(userSessionData)
+          }
+          catch(error){
+            if (error instanceof Error) {
+              console.log(error.message);
+            } else {
+              console.log(String(error));
+            }
+            
+          }
         }
-        catch(error){
+        else{
+          toast.error(sessionData.message)
+        }
+      }
+      catch(error){
+        if (error instanceof Error) {
           console.log(error.message);
-          
         }
+        
       }
-      else{
-        toast.error(sessionData.message)
-      }
-    }
-    catch(error){
-      console.log(error.message);
-      
+    } else {
+      toast.error("User is not logged in.");
     }
   }
-  }, [timerIsActive, sessionType, user.userName, setUserSessions])
+  }, [timerIsActive, sessionType, user, setUserSessions])
 
 
   useEffect(() => {
@@ -101,7 +111,7 @@ export default function Pomodoro() {
     return () => clearInterval(interval);
   }, [timerIsActive, pomodoroLength, breakLength, isPomodoro, handleSuccesfullSession]);
 
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
       .toString()
       .padStart(2, "0");
@@ -112,14 +122,14 @@ export default function Pomodoro() {
     return `${hours}:${minutes}:${secs}`;
   };
 
-  const handleNewSession = (e) => {
+  const handleNewSession = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
+    const formData = new FormData(e.target as HTMLFormElement);
     const payload = Object.fromEntries(formData);
     const totalTime = "00:" + payload.time;
     workedTimeRef.current = 0
     setIsPomodoro(true)
-    setSessionType(payload.type)
+    setSessionType(payload.type as string)
 
     const [totalhours, totalminutes, totalseconds] = totalTime
       .split(":")
@@ -128,6 +138,11 @@ export default function Pomodoro() {
     const totalTimeSeconds =
       totalhours * 3600 + totalminutes * 60 + totalseconds;
     totalTimeRef.current = totalTimeSeconds;
+
+    if (!user) {
+      toast.error("User is not logged in.");
+      return;
+    }
 
     const [preferedhours, preferedminutes, preferedseconds] = user.preferredPomodoro
       .split(":")
@@ -148,7 +163,7 @@ export default function Pomodoro() {
       preferedBreakminutes * 60 +
       preferedBreakseconds;
 
-      if(totalTimeSeconds <= preferedTimeSeconds){
+      if(totalTimeSeconds < preferedTimeSeconds){
         preferedTimeSeconds = totalTimeSeconds
         preferedBreakSeconds = 0
       }
@@ -190,7 +205,7 @@ export default function Pomodoro() {
 
   //Säger åt användaren att deras sparningar kanske går förlorade
   useEffect(() => {
-    const handleBeforeUnload = (event) => {
+    const handleBeforeUnload = (event: { returnValue: string; }) => {
       if (timerIsActive) {
         const message = "You have an active session. Are you sure you want to leave?";
         event.returnValue = message; 
@@ -247,7 +262,7 @@ export default function Pomodoro() {
            </div>
         ) : (
           <div className="flex flex-col items-center">
-            <h2 className="font-semibold text-tomato-700 text-3xl pt-6 pb-12">Welcome {user.userName}!</h2>
+            <h2 className="font-semibold text-tomato-700 text-3xl pt-6 pb-12">Welcome {user ? user.userName : "Guest"}!</h2>
             <h3 className="text-tomato-500 text-xl">Start a new Session</h3>
             <form
               className="flex flex-col items-center gap-10 bg-tomato-100 rounded-md shadow-md p-4"

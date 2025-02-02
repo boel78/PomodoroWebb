@@ -1,14 +1,54 @@
 "use client"
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, ReactNode } from "react";
 
-const UserContext = createContext(null);
+interface UserProviderProps {
+  children: ReactNode;
+}
+
+interface User {
+  algoritmsetting: string;
+  preferredBreak: string;
+  preferredPomodoro: string;
+  userName: string;
+  id: string;
+  email: string;
+}
+
+interface Session {
+  id: string;
+  dateCreated: string;
+  timeSpent: number;
+  totalExtraTime: string;
+  tasksCompleted: number;
+  type: string;
+}
+
+interface UserContextType {
+  user: User | null;
+  userSessions: Session[] | null;
+  login: (userData: User, sessionData: Session[]) => void;
+  logout: () => void;
+  setUser: (user: User | null) => void;
+  setUserSessions: (sessions: Session[]) => void;
+}
+
+const defaultContext: UserContextType = {
+  user: null,
+  userSessions: null,
+  login: () => {},
+  logout: () => {},
+  setUser: () => {},
+  setUserSessions: () => {},
+};
+
+const UserContext = createContext<UserContextType>(defaultContext);
 
 export const useUser = () => useContext(UserContext);
 
-export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [userSessions, setUserSessions] = useState(null);
-  const login = (userData, sessionData) => {
+export const UserProvider = ({ children }:UserProviderProps) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [userSessions, setUserSessions] = useState<Session[] | null>(null);
+  const login = (userData: User, sessionData: Session[]) => {
     setUser(userData)
     setUserSessions(sessionData)  
     
@@ -45,7 +85,7 @@ export const UserProvider = ({ children }) => {
     } else {
       localStorage.removeItem("user"); 
     }
-  }, [user]);
+  }, [user, userSessions]);
   
 
   return (

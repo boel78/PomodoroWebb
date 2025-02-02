@@ -47,7 +47,7 @@ export default function MultiStepForm(){
                     headers: {
                         'Content-Type': 'application/json',
                       },
-                      body: JSON.stringify({userName: user.userName, newAlgorithm: data.Algorithm, preferredTime: data.PreferredTime+":00", preferredBreak: data.PrefferedBreak+":00", didInitialSetup: true }),
+                      body: JSON.stringify({userName: user?.userName, newAlgorithm: data.Algorithm, preferredTime: data.PreferredTime+":00", preferredBreak: data.PrefferedBreak+":00", didInitialSetup: true }),
             })
             const responseData = await response.json();
             if(responseData.success){
@@ -57,7 +57,11 @@ export default function MultiStepForm(){
             }
         }
         catch(error){
-            console.log(error.message);
+            if (error instanceof Error) {
+                console.log(error.message);
+            } else {
+                console.log(String(error));
+            }
         }
         
     }

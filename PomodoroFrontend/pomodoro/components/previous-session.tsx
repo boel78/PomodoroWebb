@@ -1,4 +1,10 @@
-export default function PreviousSession({ data }){
+interface SessionData {
+    type: string;
+    dateCreated: string;
+    timeSpent: number;
+}
+
+export default function PreviousSession({ data }: { data: SessionData }){
     console.log("PreviousSession props:", data);
 
 return(

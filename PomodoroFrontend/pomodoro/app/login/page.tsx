@@ -13,10 +13,10 @@ export default function Login(){
   const router = useRouter();
   const {login} = useUser()
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target);
+    const formData = new FormData(e.target as HTMLFormElement);
     const payload = Object.fromEntries(formData);
 
     try {
@@ -31,7 +31,7 @@ export default function Login(){
       if(data.success){
 
         try{
-          const sessionResponse = await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/GetSessionsByUsername/${encodeURIComponent(payload.username)}`,{
+          const sessionResponse = await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/GetSessionsByUsername/${encodeURIComponent(payload.username as string)}`,{
             method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,11 @@ export default function Login(){
           
         }
         catch(error){
-          toast.error(error.message)
+          if (error instanceof Error) {
+            toast.error(error.message);
+          } else {
+            toast.error('An unknown error occurred');
+          }
         }
         toast.success(data.message)
       }
@@ -58,7 +62,11 @@ export default function Login(){
         toast.error(data.message)
       }
     } catch (error) {
-      toast.error(error.message)
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('An unknown error occurred');
+      }
     }
     
   }

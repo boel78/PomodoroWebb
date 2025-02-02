@@ -8,10 +8,10 @@ import { useRouter } from 'next/navigation';
 export default function Register(){
     const router = useRouter();
 
-    const handleRegister = async (e) => {
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const formData = new FormData(e.target);
+        const formData = new FormData(e.target as HTMLFormElement);
         const payload = Object.fromEntries(formData);
 
         if(payload.cnf_password != payload.password){
@@ -39,8 +39,11 @@ export default function Register(){
                 }
             }
             catch(error){
-                console.log(error.message)
-                toast.error(error.message)
+                if (error instanceof Error) {
+                    console.log(error.message);
+                } else {
+                    console.log(String(error));
+                }
             }
         }
 

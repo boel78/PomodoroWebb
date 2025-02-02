@@ -9,7 +9,7 @@ interface InputWithLabelProps {
   placeholder?: string
   required?: boolean
   value?: string
-  onChange?: (e) => void
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export default function InputWithLabel({ label, id, type = "text", placeholder, name, required = false, value, onChange }: InputWithLabelProps) {

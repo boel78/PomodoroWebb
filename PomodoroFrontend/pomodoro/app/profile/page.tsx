@@ -9,11 +9,16 @@ import { toast } from "react-toastify";
 export default function Profile() {
     const {user, setUser} = useUser()
 
-    const handleEdit = async (e) => {
+    const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const formData = new FormData(e.target);
+        const formData = new FormData(e.target as HTMLFormElement);
         const payload = Object.fromEntries(formData);
-        payload.userName = user.userName
+        if (user) {
+            payload.userName = user.userName;
+        } else {
+            toast.error("User is not logged in");
+            return;
+        }
         payload.preferredTime = payload.preferredTime + ":00"
         payload.preferredBreak = payload.preferredBreak + ":00"
         console.log(payload);
@@ -36,7 +41,11 @@ export default function Profile() {
             }
         }
         catch(error){
-            console.log(error.message);
+            if (error instanceof Error) {
+                console.log(error.message);
+            } else {
+                console.log(String(error));
+            }
             
         }
         
