@@ -74,7 +74,7 @@ export default function Home() {
               <p>
                 Pomodoro-Buddy keeps you motivated by tracking your productivity
                 and presenting detailed weekly statistics. By visualizing the
-                time you've spent focused on your tasks, it helps you celebrate
+                time you&apos;ve spent focused on your tasks, it helps you celebrate
                 your progress and encourages you to stay consistent. With
                 insights into your achievements, Pomodoro-Buddy inspires you to
                 push further and maintain your momentum.
@@ -106,20 +106,20 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <p className="italic">
-                "Pomodoro-Buddy has been a game-changer for me. It's helped me
-                stay focused and motivated throughout the day, and I've seen a
+                &quot;Pomodoro-Buddy has been a game-changer for me. It&apos;s helped me
+                stay focused and motivated throughout the day, and I&apos;ve seen a
                 significant improvement in my productivity. I highly recommend
-                it to anyone looking to manage their time more effectively."
+                it to anyone looking to manage their time more effectively.&quot;
               </p>
               <p className="mt-4 font-bold">- John Doe</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
               <p className="italic">
-                "I've tried several productivity tools in the past, but
-                Pomodoro-Buddy is by far the best. It's simple to use, and the
+                &quot;I&apos;ve tried several productivity tools in the past, but
+                Pomodoro-Buddy is by far the best. It&apos;s simple to use, and the
                 Pomodoro technique has made a huge difference in how I approach
                 my work. I love the gamification aspect—it keeps me motivated
-                and engaged."
+                and engaged.&quot;
               </p>
               <p className="mt-4 font-bold">- Jane Smith</p>
             </div>

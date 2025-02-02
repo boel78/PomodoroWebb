@@ -2,7 +2,7 @@
 import InputWithLabel from "@/components/ui/input-with-label";
 import PreviousSession from "@/components/previous-session";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef, useCallback} from "react";
 import { useUser } from "@/context/UserContext";
 import ConfirmCancel from "@/components/ConfirmCancel";
 import { toast } from "react-toastify";
@@ -26,6 +26,56 @@ export default function Pomodoro() {
     setIsMounted(true);
   }, []);
 
+  const handleSuccesfullSession = useCallback(async () => {
+    if(timerIsActive){setTimerIsActive(false)}
+    if(workedTimeRef.current != 0){
+    let date = new Date(Date.now()).toISOString()
+    const dates = date.split("T")
+    date = dates[0]
+    
+    const session = {
+      type: sessionType,
+      timeSpent: formatTime(workedTimeRef.current),
+      dateCreated: date
+    }
+    console.log(session);
+    try{
+      const response = await fetch('https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/addSession', {
+        method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ userName: user.userName, session: session }),
+      })
+      const sessionData = await response.json();
+      
+      if(sessionData.success){
+        toast.success("Successfully added the new Session!")
+        //Hämta sessions
+        try{
+          const userSessionResponse = await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/getSessionsByUsername/${user.userName}`, {
+            method: 'GET',
+          })
+          const userSessionData = await userSessionResponse.json()
+          setUserSessions(userSessionData)
+        }
+        catch(error){
+          console.log(error.message);
+          
+        }
+      }
+      else{
+        toast.error(sessionData.message)
+      }
+    }
+    catch(error){
+      console.log(error.message);
+      
+    }
+  }
+  }, [timerIsActive, sessionType, user.userName, setUserSessions])
+
+
   useEffect(() => {
     if (!timerIsActive) return;
   
@@ -43,16 +93,13 @@ export default function Pomodoro() {
           }
           return isPomodoro ? breakLength : pomodoroLength;
         }
-        /*if (isPomodoro) {
-          setWorkedTime((prev) => prev + 1); 
-        }*/
 
         return prevTime - 1;
       });
     }, 1000);
   
     return () => clearInterval(interval);
-  }, [timerIsActive, pomodoroLength, breakLength, isPomodoro]);
+  }, [timerIsActive, pomodoroLength, breakLength, isPomodoro, handleSuccesfullSession]);
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600)
@@ -133,54 +180,7 @@ export default function Pomodoro() {
     //setTimerIsActive(true);
   },[pomodoroLength, breakLength])
 
-  const handleSuccesfullSession = async () => {
-    if(timerIsActive){setTimerIsActive(false)}
-    if(workedTimeRef.current != 0){
-    let date = new Date(Date.now()).toISOString()
-    const dates = date.split("T")
-    date = dates[0]
-    
-    const session = {
-      type: sessionType,
-      timeSpent: formatTime(workedTimeRef.current),
-      dateCreated: date
-    }
-    console.log(session);
-    try{
-      const response = await fetch('https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/addSession', {
-        method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({ userName: user.userName, session: session }),
-      })
-      const sessionData = await response.json();
-      
-      if(sessionData.success){
-        toast.success("Successfully added the new Session!")
-        //Hämta sessions
-        try{
-          const userSessionResponse = await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/getSessionsByUsername/${user.userName}`, {
-            method: 'GET',
-          })
-          const userSessionData = await userSessionResponse.json()
-          setUserSessions(userSessionData)
-        }
-        catch(error){
-          console.log(error.message);
-          
-        }
-      }
-      else{
-        toast.error(sessionData.message)
-      }
-    }
-    catch(error){
-      console.log(error.message);
-      
-    }
-  }
-  }
+  
 
   const handleSetSessionVisible = () => {
     if(window.innerWidth < 500 ){

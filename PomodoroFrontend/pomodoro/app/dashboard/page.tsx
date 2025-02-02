@@ -46,7 +46,7 @@ export default function Dashboard() {
 
       setMostCommonType(mostCommonType);
     }
-  }, []);
+  }, [userSessions]);
 
   //Hjälpfunktion för formatering av tid
   const formatTime = (seconds) => {
