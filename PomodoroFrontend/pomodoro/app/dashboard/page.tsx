@@ -41,7 +41,7 @@ export default function Dashboard() {
 
       //Kollar mest använda typ
       const mostCommonType = Object.keys(typeCount).reduce((a, b) =>
-        typeCount[a] > typeCount[b] ? a : b
+        typeCount[a] > typeCount[b] ? a : b, ""
       );
 
       setMostCommonType(mostCommonType);
