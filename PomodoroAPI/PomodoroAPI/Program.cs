@@ -21,7 +21,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost", builder =>
-        builder.WithOrigins("https://pomodoro-webb-kmha81nay-noelfockstedt-liveses-projects.vercel.app")
+        builder.WithOrigins("https://pomodoro-webb.vercel.app")
             .AllowAnyMethod()
             .AllowAnyHeader());
 });

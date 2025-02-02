@@ -81,7 +81,7 @@ export default function Login(){
       </form>
       <div className='flex flex-col items-center gap-5'>
         <h2>Dont have an account?</h2>
-        <Link href='/register'><Button variant={'outline'} className='bg-tomato-200 hover:bg-tomato-600'>Register</Button></Link>
+        <Link href='/Register'><Button variant={'outline'} className='bg-tomato-200 hover:bg-tomato-600'>Register</Button></Link>
       </div>
     </div>
   )
