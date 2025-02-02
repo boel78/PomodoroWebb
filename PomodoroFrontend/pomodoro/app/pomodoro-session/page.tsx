@@ -26,6 +26,8 @@ export default function Pomodoro() {
     setIsMounted(true);
   }, []);
 
+  
+
   const handleSuccesfullSession = useCallback(async () => {
     if(timerIsActive){setTimerIsActive(false)}
     if(workedTimeRef.current != 0){

@@ -11,6 +11,10 @@ export default function Dashboard() {
   const [mostCommonType, setMostCommonType] = useState("");
 
   useEffect(() => {
+    console.log("Dashboard: userSessions", userSessions);
+  }, [userSessions]);
+
+  useEffect(() => {
     if (userSessions) {
       const typeCount: { [key: string]: number } = {};
       let totalExtraTimeAccum = 0;
