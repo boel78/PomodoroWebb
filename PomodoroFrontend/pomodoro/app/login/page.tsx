@@ -1,5 +1,5 @@
 "use client"
-import React, { useContext } from 'react'
+import React from 'react'
 import { Button} from "@/components/ui/button"
 import InputWithLabel from "@/components/ui/input-with-label"
 import {toast} from 'react-toastify';
@@ -20,7 +20,7 @@ export default function Login(){
     const payload = Object.fromEntries(formData);
 
     try {
-      const response = await fetch('http://localhost:5239/api/User/login',{
+      const response = await fetch('https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/User/login',{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export default function Login(){
       if(data.success){
 
         try{
-          const sessionResponse = await fetch(`http://localhost:5239/api/Session/GetSessionsByUsername/${encodeURIComponent(payload.username)}`,{
+          const sessionResponse = await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/GetSessionsByUsername/${encodeURIComponent(payload.username)}`,{
             method: 'GET',
         headers: {
           'Content-Type': 'application/json',

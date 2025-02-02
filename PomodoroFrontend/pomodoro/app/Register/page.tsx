@@ -1,5 +1,5 @@
 "use client"
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import { Button} from "@/components/ui/button"
 import InputWithLabel from "@/components/ui/input-with-label"
 import {toast} from 'react-toastify';
@@ -19,7 +19,7 @@ export default function Register(){
         }
         else{
             try{
-                const response = await fetch('http://localhost:5239/api/User/register',{
+                const response = await fetch('https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/User/register',{
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

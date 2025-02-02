@@ -4,7 +4,7 @@ import LoginNav from "@/components/LoginNav";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
-  const { user, userSessions } = useUser();
+  const { userSessions } = useUser();
   const [totalTime, setTotalTime] = useState(0);
   const [tasksCompleted, setTasksCompleted] = useState(0);
   const [totalExtraTime, setTotalExtraTime] = useState(0);
