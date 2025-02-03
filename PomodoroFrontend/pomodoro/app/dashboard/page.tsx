@@ -23,6 +23,7 @@ export default function Dashboard() {
 
       //Går igenom varje session
       userSessions.map((sessions) => {
+
         if (isDateInCurrentWeek(sessions.dateCreated)) {
           //Formaterar totalTid till sekunder och sätter det
           const [totalhours, totalminutes, totalseconds] = String(sessions.timeSpent)
@@ -57,6 +58,9 @@ export default function Dashboard() {
 
       setMostCommonType(mostCommonType);
     }
+    else{
+      
+    }
   }, [userSessions]);
 
   //Hjälpfunktion för formatering av tid
@@ -75,9 +79,10 @@ export default function Dashboard() {
     const date = new Date(dateString);
     const now = new Date();
 
-    // Hitta måndag i denna vecka
     const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay() + 1);
+    const dayOfWeek = now.getDay(); 
+
+    startOfWeek.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
     startOfWeek.setHours(0, 0, 0, 0);
 
     const endOfWeek = new Date(startOfWeek);
@@ -85,7 +90,7 @@ export default function Dashboard() {
     endOfWeek.setHours(23, 59, 59, 999);
 
     return date >= startOfWeek && date <= endOfWeek;
-  }
+}
 
   return (
     <>
