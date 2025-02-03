@@ -132,8 +132,6 @@ export default function Pomodoro() {
     workedTimeRef.current = 0
     setIsPomodoro(true)
     setSessionType(payload.type as string)
-
-    console.log(totalTime);
     
     const [totalhours, totalminutes, totalseconds] = totalTime
       .split(":")
@@ -143,6 +141,9 @@ export default function Pomodoro() {
       totalhours * 3600 + totalminutes * 60 + totalseconds;
     totalTimeRef.current = totalTimeSeconds;
 
+    console.log(totalTimeSeconds);
+    
+
     if (!user) {
       toast.error("User is not logged in.");
       return;
@@ -151,35 +152,42 @@ export default function Pomodoro() {
     const [preferedhours, preferedminutes, preferedseconds] = user.preferredPomodoro
       .split(":")
       .map(Number);
+
+      
     
     
     const [preferedBreakhours, preferedBreakminutes, preferedBreakseconds] =
       user.preferredBreak.split(":").map(Number);
 
     let preferedTimeSeconds =
-      preferedhours * 3600 + preferedminutes * 60 + preferedseconds;
-
-    console.log(preferedTimeSeconds);
-    
+      preferedhours * 3600 + preferedminutes * 60 + preferedseconds;    
 
       let preferedBreakSeconds =
       preferedBreakhours * 3600 +
       preferedBreakminutes * 60 +
       preferedBreakseconds;
 
-      if(totalTimeSeconds < preferedTimeSeconds){
+      if(totalTimeSeconds < preferedTimeSeconds){        
         preferedTimeSeconds = totalTimeSeconds
         preferedBreakSeconds = 0
       }
     
 
     const cycle_length = preferedBreakSeconds + preferedTimeSeconds;
+    
+    
+    
 
     const amount_of_cycles = Math.floor(totalTimeSeconds / cycle_length);
-
+    
+    
+    
     const rest_time = totalTimeSeconds - amount_of_cycles * cycle_length;
 
+    
+
     const time_per_setting = rest_time / amount_of_cycles;
+    
 
     if (user.algoritmsetting === "longer_break") {
       setPomodoroLength(preferedTimeSeconds);
@@ -195,6 +203,8 @@ export default function Pomodoro() {
   };
 
   useEffect(() => {
+    console.log(pomodoroLength);
+    
     setTimer(pomodoroLength);
     //setTimerIsActive(true);
   },[pomodoroLength, breakLength])

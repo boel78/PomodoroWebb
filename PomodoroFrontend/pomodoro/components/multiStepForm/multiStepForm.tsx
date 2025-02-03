@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation"
 
 export default function MultiStepForm(){
 
-    const {user} = useUser()
+    const {user, setUser} = useUser()
     const router = useRouter()
 
     type FormData = {
@@ -47,11 +47,24 @@ export default function MultiStepForm(){
                     headers: {
                         'Content-Type': 'application/json',
                       },
-                      body: JSON.stringify({userName: user?.userName, newAlgorithm: data.Algorithm, preferredTime: data.PreferredTime+":00", preferredBreak: data.PrefferedBreak+":00", didInitialSetup: true }),
+                      body: JSON.stringify({userName: user?.userName, newAlgorithm: data.Algorithm, preferredPomodoro: data.PreferredTime+":00", preferredBreak: data.PrefferedBreak+":00", didInitialSetup: true }),
             })
             const responseData = await response.json();
             if(responseData.success){
                 toast.success("Your account is successfully setup!")
+                const updatedUser = {
+                    ...user,
+                    newAlgorithm: data.Algorithm,
+                    preferredBreak: data.PrefferedBreak + ":00",
+                    didInitialSetup: true,
+                    algoritmsetting: user?.algoritmsetting || "",
+                    preferredPomodoro: data.PreferredTime + ":00",
+                    streak: user?.streak || 0,
+                    userName: user?.userName || "",
+                    id: user?.id || "",
+                    email: user?.email || ""
+                };
+                setUser(updatedUser);
                 router.push("/pomodoro-session")
                 
             }
