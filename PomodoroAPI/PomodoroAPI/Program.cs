@@ -21,7 +21,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost", builder =>
-        builder.WithOrigins("https://pomodoro-webb.vercel.app")
+        builder.WithOrigins("https://pomodoro-webb.vercel.app", "http://localhost:3000")
             .AllowAnyMethod()
             .AllowAnyHeader());
 });

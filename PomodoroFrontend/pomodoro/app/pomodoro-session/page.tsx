@@ -128,11 +128,13 @@ export default function Pomodoro() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const payload = Object.fromEntries(formData);
-    const totalTime = "00:" + payload.time;
+    const totalTime = payload.time + ":00" as string;
     workedTimeRef.current = 0
     setIsPomodoro(true)
     setSessionType(payload.type as string)
 
+    console.log(totalTime);
+    
     const [totalhours, totalminutes, totalseconds] = totalTime
       .split(":")
       .map(Number);
