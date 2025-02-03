@@ -4,9 +4,11 @@ import { Button} from "@/components/ui/button"
 import InputWithLabel from "@/components/ui/input-with-label"
 import {toast} from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/context/UserContext';
 
 export default function Register(){
     const router = useRouter();
+    const {logout, login} = useUser()
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -29,8 +31,10 @@ export default function Register(){
                 const data = await response.json();
 
                 if(data.success){
+                    logout();
                     toast.success(data.message)
-                    router.push("/account-setup")
+                    router.push("/login")
+                    
                 }
                 else{
                     toast.error(data.message, {

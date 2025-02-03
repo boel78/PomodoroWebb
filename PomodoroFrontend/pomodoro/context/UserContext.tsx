@@ -56,8 +56,8 @@ export const UserProvider = ({ children }:UserProviderProps) => {
     };
   const logout = () => {
     setUser(null)
-    localStorage.removeItem("user")
-    localStorage.removeItem("sessions")
+    if(localStorage.getItem("user")){localStorage.removeItem("user")}
+    if(localStorage.getItem("sessions")){localStorage.removeItem("sessions")}
   };
 
     useEffect(() => {
