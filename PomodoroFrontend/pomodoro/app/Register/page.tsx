@@ -8,7 +8,7 @@ import { useUser } from '@/context/UserContext';
 
 export default function Register(){
     const router = useRouter();
-    const {logout, login} = useUser()
+    const {logout} = useUser()
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
