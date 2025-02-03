@@ -29,19 +29,22 @@ export default function Pomodoro() {
   
 
   const handleSuccesfullSession = useCallback(async () => {
-    if(timerIsActive){setTimerIsActive(false)}
+    if(timerIsActive){setTimerIsActive(false)}    
     if(workedTimeRef.current != 0){
     let date = new Date(Date.now()).toISOString()
     const dates = date.split("T")
     date = dates[0]
+
     
     const session = {
       type: sessionType,
-      timeSpent: Number(workedTimeRef.current),
-      dateCreated: date
+      timeSpent: formatTime(workedTimeRef.current),
+      dateCreated: date,
+      tasksCompleted: 0,
+      totalExtraTime: formatTime(0)
     }
-    console.log(session);
     if (user) {
+      
       try {
         const response = await fetch('https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/addSession', {
           method: 'POST',
@@ -130,6 +133,7 @@ export default function Pomodoro() {
     const payload = Object.fromEntries(formData);
     const totalTime = payload.time + ":00" as string;
     workedTimeRef.current = 0
+    totalTimeRef.current = 0
     setIsPomodoro(true)
     setSessionType(payload.type as string)
     
@@ -141,7 +145,7 @@ export default function Pomodoro() {
       totalhours * 3600 + totalminutes * 60 + totalseconds;
     totalTimeRef.current = totalTimeSeconds;
 
-    console.log(totalTimeSeconds);
+    setTimer(pomodoroLength);
     
 
     if (!user) {
@@ -198,13 +202,11 @@ export default function Pomodoro() {
       setBreakLength(preferedBreakSeconds);
     }
 
-    //setTimer(pomodoroLength);
+    
     setTimerIsActive(true);
   };
 
-  useEffect(() => {
-    console.log(pomodoroLength);
-    
+  useEffect(() => {    
     setTimer(pomodoroLength);
     //setTimerIsActive(true);
   },[pomodoroLength, breakLength])
