@@ -63,6 +63,8 @@ export default function Pomodoro() {
                         },
                         body: JSON.stringify({ userName: user.userName, session: session }),
         })
+        console.log(response);
+        
         const sessionData = await response.json();
         
         if(sessionData.success){
