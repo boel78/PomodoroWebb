@@ -8,7 +8,7 @@ import ConfirmCancel from "@/components/ConfirmCancel";
 import { toast } from "react-toastify";
 import LoginNav from "@/components/LoginNav";
 import TaskList from "@/components/TaskList";
-import { Ban, BanIcon } from "lucide-react";
+import { Ban } from "lucide-react";
 
 export default function Pomodoro() {
   const totalTimeRef = useRef(0);
