@@ -7,8 +7,8 @@ type ConfirmCancelProps = {
 
 export default function ConfirmCancel({setShowCancelWindow, handleSuccesfullSession}: ConfirmCancelProps){
     const handleCancel = () => {
-        setShowCancelWindow(false)
         handleSuccesfullSession()
+        setShowCancelWindow(false)
     }
     return(
         <div className="absolute z-20 left-0 md:left-1/2 px-4 bg-white h-1/4 md:h-1/3 flex flex-col items-center gap-12 md:gap-20 shadow-md pt-4">

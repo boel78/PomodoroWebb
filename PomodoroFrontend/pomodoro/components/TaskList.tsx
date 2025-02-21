@@ -4,10 +4,10 @@ import InputWithLabel from "./ui/input-with-label";
 type TaskListProps = {
     taskList: {id: number, text: string}[]
     setTaskList: React.Dispatch<React.SetStateAction<{id: number, text:string}[]>>
-
+    handleCompleteTask: () => void
 }
 
-export default function TaskList({taskList, setTaskList} : TaskListProps){
+export default function TaskList({taskList, setTaskList, handleCompleteTask} : TaskListProps){
 
     const addTask = () => {
         const newTaskObj = { id: taskList.length, text: "" };
@@ -27,10 +27,11 @@ export default function TaskList({taskList, setTaskList} : TaskListProps){
     const deleteTask = (id:number) => {
         const newTaskList = taskList.filter((task) => task.id !== id)
         setTaskList(newTaskList)
+        handleCompleteTask()
     }
 
     return(
-        <div className="flex flex-col gap-4 items-center bg-tomato-100 w-full rounded-md shadow-md">
+        <div className="flex flex-col gap-4 items-center bg-tomato-100 w-full rounded-md shadow-md pb-5">
             <h2 className='font-medium'>Task List</h2>
             {taskList.map((task) => {
                 return(

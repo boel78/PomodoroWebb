@@ -23,12 +23,24 @@ export default function Pomodoro() {
   const [isSessionsVisible, setIsSessionsVisible] = useState(true)
   const [isMounted, setIsMounted] = useState(false);
   const [taskList, setTaskList] = useState<{id: number, text: string}[]>([]);
+  const completedTasks = useRef(0);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  
+  const handleCompleteTask = () => {
+
+    if(timerIsActive){
+      completedTasks.current += 1;
+    } 
+    
+  }
+
+  useEffect(() => {
+    console.log(completedTasks);
+    
+  }, [completedTasks])
 
   const handleSuccesfullSession = useCallback(async () => {
     if(timerIsActive){setTimerIsActive(false)}    
@@ -36,13 +48,11 @@ export default function Pomodoro() {
     let date = new Date(Date.now()).toISOString()
     const dates = date.split("T")
     date = dates[0]
-
-    
     const session = {
       type: sessionType,
       timeSpent: formatTime(workedTimeRef.current),
       dateCreated: date,
-      tasksCompleted: 0,
+      tasksCompleted: completedTasks.current,
       totalExtraTime: formatTime(0)
     }
     if (user) {
@@ -98,10 +108,12 @@ export default function Pomodoro() {
   
     const interval = setInterval(() => {
       setTimer((prevTime) => {
+        if(isPomodoro){workedTimeRef.current += 1}
+
         if (prevTime <= 1) {
           totalTimeRef.current -= isPomodoro ? pomodoroLength : breakLength;
           
-          if(isPomodoro){workedTimeRef.current += pomodoroLength}
+          
           setIsPomodoro((prevIsPomodoro) => !prevIsPomodoro);
   
           if (totalTimeRef.current <= 0) {
@@ -131,6 +143,7 @@ export default function Pomodoro() {
 
   const handleNewSession = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    completedTasks.current = 0;
     const formData = new FormData(e.target as HTMLFormElement);
     const payload = Object.fromEntries(formData);
     const totalTime = payload.time + ":00" as string;
@@ -276,6 +289,7 @@ export default function Pomodoro() {
               
               <h2>Time left: {formatTime(timer)}</h2>
               <Button variant={'outline'} className="bg-tomato-700 text-tomato-50" onClick={() => setShowCancelWindow(!showCancelWindow)}>Cancel</Button>
+              <TaskList taskList={taskList} setTaskList={setTaskList} handleCompleteTask={handleCompleteTask}/>
             </div>
            </div>
            </div>
@@ -306,7 +320,7 @@ export default function Pomodoro() {
                 />
                 <Button variant={"outline"} className="bg-tomato-700 text-tomato-50">Start</Button>
               </form>
-              <TaskList taskList={taskList} setTaskList={setTaskList}/>
+              <TaskList taskList={taskList} setTaskList={setTaskList} handleCompleteTask={handleCompleteTask}/>
             </div>
           </div>
         )}
