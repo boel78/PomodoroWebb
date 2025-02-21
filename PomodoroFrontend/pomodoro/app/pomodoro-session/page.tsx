@@ -2,7 +2,7 @@
 import InputWithLabel from "@/components/ui/input-with-label";
 import PreviousSession from "@/components/previous-session";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect, useRef, useCallback} from "react";
+import { useState, useEffect, useRef, useCallback, ChangeEvent} from "react";
 import { useUser } from "@/context/UserContext";
 import ConfirmCancel from "@/components/ConfirmCancel";
 import { toast } from "react-toastify";
@@ -23,6 +23,7 @@ export default function Pomodoro() {
   const {user, userSessions, setUserSessions} = useUser();
   const [isSessionsVisible, setIsSessionsVisible] = useState(true)
   const [isMounted, setIsMounted] = useState(false);
+  const [showExtraTimeText, setShowExtraTimeText] = useState("")
   const [showRemainingTime, setShowRemainingTime] = useState(true);
   const [taskList, setTaskList] = useState<{id: number, text: string}[]>([]);
   const completedTasks = useRef(0);
@@ -139,6 +140,10 @@ export default function Pomodoro() {
   };
 
   const handleNewSession = (e: React.FormEvent<HTMLFormElement>) => {
+    if (!user) {
+      toast.error("User is not logged in.");
+      return;
+    }
     e.preventDefault();
     completedTasks.current = 0;
     const formData = new FormData(e.target as HTMLFormElement);
@@ -148,22 +153,75 @@ export default function Pomodoro() {
     totalTimeRef.current = 0
     setIsPomodoro(true)
     setSessionType(payload.type as string)
+
+    setTimer(pomodoroLength);
     
+    
+    
+    const [preferedhours, preferedminutes, preferedseconds] = user.preferredPomodoro
+      .split(":")
+      .map(Number);
+
+      
+    
+    
+    const [preferedBreakhours, preferedBreakminutes, preferedBreakseconds] =
+      user.preferredBreak.split(":").map(Number);
+
+    const preferedTimeSeconds =
+      preferedhours * 3600 + preferedminutes * 60 + preferedseconds;    
+
+      const preferedBreakSeconds =
+      preferedBreakhours * 3600 +
+      preferedBreakminutes * 60 +
+      preferedBreakseconds;
+
+      const time_per_setting = calculateExtraTime(totalTime)
+
+
+    if (user.algoritmsetting === "longer_break") {
+      setPomodoroLength(preferedTimeSeconds);
+      setBreakLength(preferedBreakSeconds + (time_per_setting ?? 0));
+      
+    } else {
+      setPomodoroLength(preferedTimeSeconds + (time_per_setting ?? 0));
+      setBreakLength(preferedBreakSeconds);
+    }
+
+    
+    setTimerIsActive(true);
+  };
+
+  const showExtraTime = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault()
+    const extraTime = calculateExtraTime(event.target.value + ":00")
+    
+    if(user?.algoritmsetting === "longer_break"){
+      setShowExtraTimeText(
+        extraTime && !isNaN(extraTime)
+          ? `You will have ${formatTime(Math.round(extraTime))} per break extra time for breaks`
+          : ""
+      );    }
+    else{
+      setShowExtraTimeText(
+        extraTime && !isNaN(extraTime)
+        ? `You will have ${formatTime(Math.round(extraTime ?? 0))} per pomodoro extra time for work`
+        : ""
+    )}
+
+  }
+  const calculateExtraTime = (totalTime: string) => {
+
+    if(user){
     const [totalhours, totalminutes, totalseconds] = totalTime
       .split(":")
       .map(Number);
 
     const totalTimeSeconds =
       totalhours * 3600 + totalminutes * 60 + totalseconds;
-    totalTimeRef.current = totalTimeSeconds;
+    totalTimeRef.current = totalTimeSeconds;    
 
-    setTimer(pomodoroLength);
     
-
-    if (!user) {
-      toast.error("User is not logged in.");
-      return;
-    }
 
     const [preferedhours, preferedminutes, preferedseconds] = user.preferredPomodoro
       .split(":")
@@ -203,20 +261,10 @@ export default function Pomodoro() {
     
 
     const time_per_setting = rest_time / amount_of_cycles;
-    
-
-    if (user.algoritmsetting === "longer_break") {
-      setPomodoroLength(preferedTimeSeconds);
-      setBreakLength(preferedBreakSeconds + time_per_setting);
-      
-    } else {
-      setPomodoroLength(preferedTimeSeconds + time_per_setting);
-      setBreakLength(preferedBreakSeconds);
+    return(time_per_setting)
     }
-
     
-    setTimerIsActive(true);
-  };
+  }
 
   useEffect(() => {    
     setTimer(pomodoroLength);
@@ -314,7 +362,9 @@ export default function Pomodoro() {
                   required={true}
                   label="Amount of time"
                   placeholder="00:00:00"
+                  onChange={(e) => showExtraTime(e)}
                 />
+                <p>{showExtraTimeText}</p>
                 <Button variant={"outline"} className="bg-tomato-700 text-tomato-50">Start</Button>
               </form>
               <TaskList taskList={taskList} setTaskList={setTaskList} handleCompleteTask={handleCompleteTask}/>
