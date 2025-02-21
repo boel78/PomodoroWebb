@@ -12,8 +12,8 @@ using PomodoroAPI.Models;
 namespace PomodoroAPI.Migrations
 {
     [DbContext(typeof(PomodoroContext))]
-    [Migration("20250211150129_localSetup")]
-    partial class localSetup
+    [Migration("20250221164245_TaskList")]
+    partial class TaskList
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

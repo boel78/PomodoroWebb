@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<PomodoroContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection")));
+builder.Services.AddDbContext<PomodoroContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection")));
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();

@@ -41,7 +41,7 @@ export default function TaskList({taskList, setTaskList, handleCompleteTask} : T
                     </div>
                 )
             })}
-            <Button variant={'outline'} className="bg-tomato-700 w-1/3 text-white" onClick={addTask}>New Task</Button>
+            <Button variant={'outline'} className="bg-tomato-700 min-w-20 w-1/3 text-white" onClick={addTask}>New Task</Button>
         </div>
     )
 }

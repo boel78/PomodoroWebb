@@ -8,6 +8,7 @@ import ConfirmCancel from "@/components/ConfirmCancel";
 import { toast } from "react-toastify";
 import LoginNav from "@/components/LoginNav";
 import TaskList from "@/components/TaskList";
+import { Ban, BanIcon } from "lucide-react";
 
 export default function Pomodoro() {
   const totalTimeRef = useRef(0);
@@ -22,6 +23,7 @@ export default function Pomodoro() {
   const {user, userSessions, setUserSessions} = useUser();
   const [isSessionsVisible, setIsSessionsVisible] = useState(true)
   const [isMounted, setIsMounted] = useState(false);
+  const [showRemainingTime, setShowRemainingTime] = useState(true);
   const [taskList, setTaskList] = useState<{id: number, text: string}[]>([]);
   const completedTasks = useRef(0);
 
@@ -36,11 +38,6 @@ export default function Pomodoro() {
     } 
     
   }
-
-  useEffect(() => {
-    console.log(completedTasks);
-    
-  }, [completedTasks])
 
   const handleSuccesfullSession = useCallback(async () => {
     if(timerIsActive){setTimerIsActive(false)}    
@@ -282,7 +279,7 @@ export default function Pomodoro() {
           <div>
           {showCancelWindow && <ConfirmCancel setShowCancelWindow={setShowCancelWindow} handleSuccesfullSession={handleSuccesfullSession}/>}
            <div className="flex flex-col items-center gap-10">
-             <h2>Total Time: {formatTime(totalTimeRef.current)}</h2>
+             <div className="flex items-center gap-3">{showRemainingTime ? (<><h2>Total Time: {formatTime(totalTimeRef.current)}</h2> <span onClick={() => setShowRemainingTime(false)}><Ban className="text-red-500 cursor-pointer"/></span></>) : <h2 onClick={() => setShowRemainingTime(true)} className="cursor-pointer">Show remaining time</h2>} </div>
             <div className="flex flex-col items-center gap-5">
               {isPomodoro ? <h2>Time to work!</h2>
               : <h2>Time for some rest!</h2>}
