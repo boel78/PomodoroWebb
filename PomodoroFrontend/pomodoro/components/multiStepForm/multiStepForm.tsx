@@ -42,7 +42,7 @@ export default function MultiStepForm(){
         if(!isLastStep) return next(); 
                
         try{
-            const response = await fetch('http://localhost:5239/api/User/update', {
+            const response = await fetch('https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/User/update', {
                 method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

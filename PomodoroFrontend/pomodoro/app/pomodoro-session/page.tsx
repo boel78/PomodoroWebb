@@ -58,7 +58,7 @@ export default function Pomodoro() {
     if (user) {
       
       try {
-        const response = await fetch('http://localhost:5239/api/Session/addSession', {
+        const response = await fetch('https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/addSession', {
           method: 'POST',
                       headers: {
                           'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export default function Pomodoro() {
           toast.success("Successfully added the new Session!")
           //Hämta sessions
           try{
-            const userSessionResponse = await fetch(`http://localhost:5239/api/Session/getSessionsByUsername/${user.userName}`, {
+            const userSessionResponse = await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/getSessionsByUsername/${user.userName}`, {
               method: 'GET',
             })
             const userSessionData = await userSessionResponse.json()
