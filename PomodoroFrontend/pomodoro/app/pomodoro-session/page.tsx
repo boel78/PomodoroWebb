@@ -7,6 +7,7 @@ import { useUser } from "@/context/UserContext";
 import ConfirmCancel from "@/components/ConfirmCancel";
 import { toast } from "react-toastify";
 import LoginNav from "@/components/LoginNav";
+import TaskList from "@/components/TaskList";
 
 export default function Pomodoro() {
   const totalTimeRef = useRef(0);
@@ -21,6 +22,7 @@ export default function Pomodoro() {
   const {user, userSessions, setUserSessions} = useUser();
   const [isSessionsVisible, setIsSessionsVisible] = useState(true)
   const [isMounted, setIsMounted] = useState(false);
+  const [taskList, setTaskList] = useState<{id: number, text: string}[]>([]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -46,7 +48,7 @@ export default function Pomodoro() {
     if (user) {
       
       try {
-        const response = await fetch('https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/addSession', {
+        const response = await fetch('http://localhost:5239/api/Session/addSession', {
           method: 'POST',
                       headers: {
                           'Content-Type': 'application/json',
@@ -59,7 +61,7 @@ export default function Pomodoro() {
           toast.success("Successfully added the new Session!")
           //Hämta sessions
           try{
-            const userSessionResponse = await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/getSessionsByUsername/${user.userName}`, {
+            const userSessionResponse = await fetch(`http://localhost:5239/api/Session/getSessionsByUsername/${user.userName}`, {
               method: 'GET',
             })
             const userSessionData = await userSessionResponse.json()
@@ -261,7 +263,8 @@ export default function Pomodoro() {
 }
         </div>
       </div>
-      <div className="col-span-3 flex flex-col items-center pb-8 md:h-full mt-20">
+      
+      <div className="col-span-3 flex flex-col items-center md:pb-8 md:h-full mt-20 overflow-y-auto">
         {timerIsActive ? (
           <div>
           {showCancelWindow && <ConfirmCancel setShowCancelWindow={setShowCancelWindow} handleSuccesfullSession={handleSuccesfullSession}/>}
@@ -277,31 +280,34 @@ export default function Pomodoro() {
            </div>
            </div>
         ) : (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center gap-10 overflow-y-auto w-full">
             <h2 className="font-semibold text-tomato-700 text-3xl pt-6 pb-12">Welcome {user ? user.userName : "Guest"}!</h2>
             <h3 className="text-tomato-500 text-xl">Start a new Session</h3>
-            <form
-              className="flex flex-col items-center gap-10 bg-tomato-100 rounded-md shadow-md p-4"
-              onSubmit={handleNewSession}
-            >
-              <InputWithLabel
-                type="text"
-                name="type"
-                id="type"
-                required={true}
-                label="Type of session"
-                placeholder="type"
-              />
-              <InputWithLabel
-                type="time"
-                name="time"
-                id="time"
-                required={true}
-                label="Amount of time"
-                placeholder="00:00:00"
-              />
-              <Button variant={"outline"} className="bg-tomato-700 text-tomato-50">Start</Button>
-            </form>
+            <div className="flex flex-col md:flex-row gap-5 w-full px-10 pb-10">
+              <form
+                className="flex flex-col items-center gap-10 bg-tomato-100 rounded-md w-full shadow-md p-4"
+                onSubmit={handleNewSession}
+              >
+                <InputWithLabel
+                  type="text"
+                  name="type"
+                  id="type"
+                  required={true}
+                  label="Type of session"
+                  placeholder="type"
+                />
+                <InputWithLabel
+                  type="time"
+                  name="time"
+                  id="time"
+                  required={true}
+                  label="Amount of time"
+                  placeholder="00:00:00"
+                />
+                <Button variant={"outline"} className="bg-tomato-700 text-tomato-50">Start</Button>
+              </form>
+              <TaskList taskList={taskList} setTaskList={setTaskList}/>
+            </div>
           </div>
         )}
       </div>

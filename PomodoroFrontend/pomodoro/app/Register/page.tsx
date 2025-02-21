@@ -21,7 +21,7 @@ export default function Register(){
         }
         else{
             try{
-                const response = await fetch('https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/User/register',{
+                const response = await fetch('http://localhost:5239/api/User/register',{
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

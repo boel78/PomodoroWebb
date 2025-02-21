@@ -158,8 +158,11 @@ namespace PomodoroAPI.Migrations
             modelBuilder.Entity("PomodoroAPI.Models.Achievement", b =>
                 {
                     b.Property<int>("Aid")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("aid");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Aid"));
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -179,24 +182,33 @@ namespace PomodoroAPI.Migrations
 
             modelBuilder.Entity("PomodoroAPI.Models.Session", b =>
                 {
-                    b.Property<int>("Sid")
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("sid");
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<DateOnly?>("DateCreated")
                         .HasColumnType("date")
                         .HasColumnName("dateCreated");
 
+                    b.Property<int>("TasksCompleted")
+                        .HasColumnType("int");
+
                     b.Property<TimeOnly?>("TimeSpent")
                         .HasColumnType("time")
                         .HasColumnName("timeSpent");
+
+                    b.Property<TimeOnly>("TotalExtraTime")
+                        .HasColumnType("time");
 
                     b.Property<string>("Type")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("type");
 
-                    b.HasKey("Sid")
+                    b.HasKey("id")
                         .HasName("PK__Sessions__DDDFDD36EAD002F3");
 
                     b.ToTable("Sessions");
@@ -218,12 +230,21 @@ namespace PomodoroAPI.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DateTimeCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("DidInitialSetup")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("LatestLoggedIn")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -247,6 +268,12 @@ namespace PomodoroAPI.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<TimeOnly>("PreferredBreak")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("PreferredPomodoro")
+                        .HasColumnType("time");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

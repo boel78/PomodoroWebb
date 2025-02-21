@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PomodoroAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class localSetup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,8 @@ namespace PomodoroAPI.Migrations
                 name: "Achievements",
                 columns: table => new
                 {
-                    aid = table.Column<int>(type: "int", nullable: false),
+                    aid = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
                 },
@@ -45,6 +46,11 @@ namespace PomodoroAPI.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Streak = table.Column<int>(type: "int", nullable: true),
                     Algoritmsetting = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    PreferredBreak = table.Column<TimeOnly>(type: "time", nullable: false),
+                    PreferredPomodoro = table.Column<TimeOnly>(type: "time", nullable: false),
+                    DidInitialSetup = table.Column<bool>(type: "bit", nullable: false),
+                    LatestLoggedIn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -69,14 +75,17 @@ namespace PomodoroAPI.Migrations
                 name: "Sessions",
                 columns: table => new
                 {
-                    sid = table.Column<int>(type: "int", nullable: false),
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     type = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     timeSpent = table.Column<TimeOnly>(type: "time", nullable: true),
-                    dateCreated = table.Column<DateOnly>(type: "date", nullable: true)
+                    dateCreated = table.Column<DateOnly>(type: "date", nullable: true),
+                    TasksCompleted = table.Column<int>(type: "int", nullable: false),
+                    TotalExtraTime = table.Column<TimeOnly>(type: "time", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Sessions__DDDFDD36EAD002F3", x => x.sid);
+                    table.PrimaryKey("PK__Sessions__DDDFDD36EAD002F3", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -226,7 +235,7 @@ namespace PomodoroAPI.Migrations
                         name: "UserSessions_Sessions_sid_fk",
                         column: x => x.SessionID,
                         principalTable: "Sessions",
-                        principalColumn: "sid");
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateIndex(
