@@ -10,6 +10,8 @@ public partial class Achievement
     public string? Title { get; set; }
 
     public string? Description { get; set; }
+    
+    public string? Image { get; set; }
 
-    public virtual ICollection<User> Uids { get; set; } = new List<User>();
+    public List<UserAchievements> UserAchievements { get; set; } = new List<UserAchievements>();
 }

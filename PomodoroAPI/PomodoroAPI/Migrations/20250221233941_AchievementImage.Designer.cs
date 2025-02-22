@@ -12,8 +12,8 @@ using PomodoroAPI.Models;
 namespace PomodoroAPI.Migrations
 {
     [DbContext(typeof(PomodoroContext))]
-    [Migration("20250221164245_TaskList")]
-    partial class TaskList
+    [Migration("20250221233941_AchievementImage")]
+    partial class AchievementImage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -172,6 +172,9 @@ namespace PomodoroAPI.Migrations
                         .HasColumnType("nvarchar(200)")
                         .HasColumnName("description");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
@@ -311,22 +314,22 @@ namespace PomodoroAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("UserAchievement", b =>
+            modelBuilder.Entity("PomodoroAPI.Models.UserAchievements", b =>
                 {
-                    b.Property<string>("Uid")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("UID");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AchievementId")
-                        .HasColumnType("int")
-                        .HasColumnName("AchievementID");
+                        .HasColumnType("int");
 
-                    b.HasKey("Uid", "AchievementId")
-                        .HasName("UserAchievements_pk");
+                    b.Property<int>("Progress")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "AchievementId");
 
                     b.HasIndex("AchievementId");
 
-                    b.ToTable("UserAchievements", (string)null);
+                    b.ToTable("UserAchievements");
                 });
 
             modelBuilder.Entity("UserSession", b =>
@@ -398,19 +401,23 @@ namespace PomodoroAPI.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("UserAchievement", b =>
+            modelBuilder.Entity("PomodoroAPI.Models.UserAchievements", b =>
                 {
-                    b.HasOne("PomodoroAPI.Models.Achievement", null)
-                        .WithMany()
+                    b.HasOne("PomodoroAPI.Models.Achievement", "Achievement")
+                        .WithMany("UserAchievements")
                         .HasForeignKey("AchievementId")
-                        .IsRequired()
-                        .HasConstraintName("UserAchievements_Achievements_aid_fk");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("PomodoroAPI.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("Uid")
-                        .IsRequired()
-                        .HasConstraintName("UserAchievements_AspNetUsers_Id_fk");
+                    b.HasOne("PomodoroAPI.Models.User", "User")
+                        .WithMany("UserAchievements")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Achievement");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UserSession", b =>
@@ -426,6 +433,16 @@ namespace PomodoroAPI.Migrations
                         .HasForeignKey("Uid")
                         .IsRequired()
                         .HasConstraintName("UserSessions_AspNetUsers_Id_fk");
+                });
+
+            modelBuilder.Entity("PomodoroAPI.Models.Achievement", b =>
+                {
+                    b.Navigation("UserAchievements");
+                });
+
+            modelBuilder.Entity("PomodoroAPI.Models.User", b =>
+                {
+                    b.Navigation("UserAchievements");
                 });
 #pragma warning restore 612, 618
         }

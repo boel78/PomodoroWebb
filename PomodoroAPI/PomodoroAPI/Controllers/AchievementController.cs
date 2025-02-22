@@ -9,17 +9,15 @@ namespace PomodoroAPI.Controllers;
 [Controller]
 [Route("api/[controller]")]
 public class AchievementController : ControllerBase
-{
-    private readonly ILogger<AchievementController> _logger;
+{ 
     private readonly IAchievementRepository _achievementRepository;
 
-    public AchievementController(ILogger<AchievementController> logger, IAchievementRepository achievementRepository)
+    public AchievementController(IAchievementRepository achievementRepository)
     {
-        _logger = logger;
         _achievementRepository = achievementRepository;
     }
 
-    [HttpGet]
+    [HttpGet("GetAchievements")]
     public async Task<IActionResult> GetAchievements()
     {
         try

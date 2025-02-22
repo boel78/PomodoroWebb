@@ -11,6 +11,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PomodoroContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection")));
 builder.Services.AddControllers();
 
+
 builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ISessionRepository, SessionRepository>();

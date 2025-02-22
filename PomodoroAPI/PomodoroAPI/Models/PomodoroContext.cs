@@ -49,8 +49,18 @@ public partial class PomodoroContext : IdentityDbContext<User>
                 .HasColumnName("title");
         });
 
+        modelBuilder.Entity<UserAchievements>()
+            .HasKey(e => new { e.UserId, e.AchievementId });
+
+        modelBuilder.Entity<UserAchievements>()
+            .HasOne(e => e.User)
+            .WithMany(e => e.UserAchievements)
+            .HasForeignKey(e => e.UserId);
         
-        
+        modelBuilder.Entity<UserAchievements>()
+            .HasOne(e => e.Achievement)
+            .WithMany(e => e.UserAchievements)
+            .HasForeignKey(e => e.AchievementId);
 
         modelBuilder.Entity<User>(entity =>
         {
@@ -65,25 +75,6 @@ public partial class PomodoroContext : IdentityDbContext<User>
             entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
             entity.Property(e => e.UserName).HasMaxLength(256);
-
-            entity.HasMany(d => d.Achievements).WithMany(p => p.Uids)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UserAchievement",
-                    r => r.HasOne<Achievement>().WithMany()
-                        .HasForeignKey("AchievementId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("UserAchievements_Achievements_aid_fk"),
-                    l => l.HasOne<User>().WithMany()
-                        .HasForeignKey("Uid")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("UserAchievements_AspNetUsers_Id_fk"),
-                    j =>
-                    {
-                        j.HasKey("Uid", "AchievementId").HasName("UserAchievements_pk");
-                        j.ToTable("UserAchievements");
-                        j.IndexerProperty<string>("Uid").HasColumnName("UID");
-                        j.IndexerProperty<int>("AchievementId").HasColumnName("AchievementID");
-                    });
 
             
 
