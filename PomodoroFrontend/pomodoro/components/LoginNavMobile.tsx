@@ -14,7 +14,7 @@ export default function LoginNavMobile() {
   };
 
   return (
-    <div className="flex flex-col justify-start gap-3 w-full bg-tomato-50 absolute z-0 pb-8 shadow-md md:hidden">
+    <div className="flex flex-col justify-start gap-3 w-full bg-tomato-50 z-50 pb-8 shadow-md md:hidden absolute">
       <Button variant={"outline"} className="bg-tomato-500 text-tomato-50">
         <Link href="/dashboard" className="w-full">Home</Link>
       </Button>

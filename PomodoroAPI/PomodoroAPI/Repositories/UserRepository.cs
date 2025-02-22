@@ -75,7 +75,11 @@ public class UserRepository : IUserRepository
     {
         var response = new ServiceResponse<User>();
         
-        var user = await userManager.FindByNameAsync(vm.Username);
+        var user = await context.Users
+            .Include(u => u.UserAchievements)
+            .ThenInclude(ua => ua.Achievement)
+            .FirstOrDefaultAsync(u => u.UserName == vm.Username);
+
         if (user == null)
         {
             response.Success = false;

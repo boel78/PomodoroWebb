@@ -13,6 +13,7 @@ interface User {
   userName: string;
   id: string;
   email: string;
+  userAchievements: [{userId: string; achievementId: number; progress: number}];
 }
 
 interface Session {

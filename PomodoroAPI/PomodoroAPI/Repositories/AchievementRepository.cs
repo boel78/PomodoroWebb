@@ -15,7 +15,7 @@ public class AchievementRepository : IAchievementRepository
     
     public async Task<List<Achievement>> GetAchievements()
     {
-        var achievements = await _context.Achievements.ToListAsync();
+        var achievements = await _context.Achievements.Include(a => a.UserAchievements).ToListAsync();
         return achievements;
     }
 }
