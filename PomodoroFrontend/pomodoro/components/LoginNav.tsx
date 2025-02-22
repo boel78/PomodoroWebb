@@ -22,7 +22,7 @@ export default function LoginNav(){
     }
 
     return(
-        <nav className="w-full bg-tomato-50 h-14 fixed shadow-md flex flex-col md:flex-row justify-between md:items-center">
+        <nav className="w-full bg-tomato-50 h-14 fixed shadow-md flex flex-col md:flex-row justify-between md:items-center z-20">
             <Link href="/dashboard"><Button variant={'outline'} className="bg-tomato-500 text-tomato-50 hidden md:block ml-2">Home</Button></Link>
             <div className="h-full flex flex-col md:flex-row md:items-center justify-center md:justify-end md:pr-2">
                 <Menu className="w-6 h-6 text-black cursor-pointer md:hidden self-end" onClick={toggleMenu}/>

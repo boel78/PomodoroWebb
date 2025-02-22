@@ -40,7 +40,7 @@ export default function Achievements() {
   },[user])
 
   return (
-    <div className="flex flex-col bg-tomato-50 h-dvh">
+    <div className="flex flex-col bg-tomato-50 h-dvh ">
       <LoginNav />
       <h2 className="text-tomato-700 text-2xl md:text-5xl pt-24 font-semibold text-center">
         Achievements
@@ -56,7 +56,7 @@ export default function Achievements() {
             }) => (
               <div
               key={`achievement-${achievement.aid}`}
-                className="flex items-start gap-4 shadow-md p-2 bg-tomato-200 rounded-md"
+                className="flex items-start gap-4 shadow-md p-2 bg-tomato-200 rounded-md "
               >
                 {user &&
                   user.userAchievements.map((userAchievement) => {
@@ -73,8 +73,7 @@ export default function Achievements() {
                         />
                       );
                     } else {
-                      return (
-                        
+                      return (                        
                         <img
                           src={achievement.image}
                           alt={achievement.title}
