@@ -45,7 +45,7 @@ export default function Achievements() {
       <h2 className="text-tomato-700 text-2xl md:text-5xl pt-24 font-semibold text-center">
         Achievements
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-10">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-10 md:pt-10">
         {achievements &&
           achievements.map(
             (achievement: {

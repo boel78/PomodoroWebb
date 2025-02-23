@@ -62,7 +62,8 @@ export default function MultiStepForm(){
                     streak: user?.streak || 0,
                     userName: user?.userName || "",
                     id: user?.id || "",
-                    email: user?.email || ""
+                    email: user?.email || "",
+                    userAchievements: user?.userAchievements.length ? user.userAchievements : [{ userId: "", achievementId: 0, progress: 0 }] as [{ userId: string; achievementId: number; progress: number; }]
                 };
                 setUser(updatedUser);
                 router.push("/pomodoro-session")
