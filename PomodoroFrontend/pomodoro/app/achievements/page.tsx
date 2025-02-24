@@ -20,8 +20,6 @@ export default function Achievements() {
           }
         );
         const data = await response.json();
-        console.log(data);
-
         setAchievements(data);
       } catch (error) {
         if (error instanceof Error) {
@@ -58,7 +56,17 @@ export default function Achievements() {
               key={`achievement-${achievement.aid}`}
                 className="flex items-start gap-4 shadow-md p-2 bg-tomato-200 rounded-md "
               >
-                {user &&
+                
+                
+              {user && (
+                user.userAchievements && user.userAchievements.length < 1 ? (
+                  <img
+                    src={achievement.image}
+                    alt={achievement.title}
+                    className="h-24 grayscale"
+                    key={`achievement-${achievement.aid}`}
+                  />
+                ) : (
                   user.userAchievements.map((userAchievement) => {
                     console.log('Achievement ID:', achievement);
                     console.log('User Achievement ID:', userAchievement.achievementId);
@@ -86,7 +94,10 @@ export default function Achievements() {
                         />
                       );
                     }
-                  })}
+                  })
+                )
+              )}
+              
                 <div>
                   <h3 className="font-semibold text-xl">{achievement.title}</h3>
                   <p>{achievement.description}</p>
