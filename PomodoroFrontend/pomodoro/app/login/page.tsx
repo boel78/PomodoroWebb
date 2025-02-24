@@ -20,7 +20,7 @@ export default function Login(){
     const payload = Object.fromEntries(formData);
 
     try {
-      const response = await fetch('http://localhost:5239/api/User/login',{
+      const response = await fetch('https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/User/login',{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +31,8 @@ export default function Login(){
       if(data.success){
 
         try{
-          const sessionResponse = await fetch(`http://localhost:5239/api/Session/GetSessionsByUsername/${encodeURIComponent(payload.username as string)}`,{
+          const sessionResponse = await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net
+/api/Session/GetSessionsByUsername/${encodeURIComponent(payload.username as string)}`,{
             method: 'GET',
         headers: {
           'Content-Type': 'application/json',

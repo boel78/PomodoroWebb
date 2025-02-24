@@ -25,7 +25,8 @@ const useAchievements = () => {
         try{
             console.log(userName, achievementTitle);
             
-            await fetch(`http://localhost:5239/api/Achievement/AddAchievementToUser?userName=${userName}&achievementTitle=${achievementTitle}`,{
+            await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net
+/api/Achievement/AddAchievementToUser?userName=${userName}&achievementTitle=${achievementTitle}`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

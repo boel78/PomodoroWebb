@@ -11,7 +11,7 @@ export default function Achievements() {
     async function fetchData() {
       try {
         const response = await fetch(
-          "http://localhost:5239/api/Achievement/GetAchievements",
+          "https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Achievement/GetAchievements",
           {
             method: "GET",
             headers: {
