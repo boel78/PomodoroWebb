@@ -64,6 +64,8 @@ export default function Achievements() {
                     console.log('User Achievement ID:', userAchievement.achievementId);
 
                     if (userAchievement.achievementId === achievement.aid) {
+                      console.log("Achievement Unlocked");
+                      
                       return (
                         <img
                           src={achievement.image}
@@ -73,6 +75,8 @@ export default function Achievements() {
                         />
                       );
                     } else {
+                      console.log("Achievement Locked");
+                      
                       return (                        
                         <img
                           src={achievement.image}

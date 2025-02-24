@@ -12,8 +12,8 @@ using PomodoroAPI.Models;
 namespace PomodoroAPI.Migrations
 {
     [DbContext(typeof(PomodoroContext))]
-    [Migration("20250222170746_UserAchievements")]
-    partial class UserAchievements
+    [Migration("20250224165430_AchievementCode")]
+    partial class AchievementCode
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
