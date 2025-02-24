@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import LoginNav from "@/components/LoginNav";
 import TaskList from "@/components/TaskList";
 import { Ban } from "lucide-react";
+import useAchievements from "@/hooks/UseAchievements";
 
 export default function Pomodoro() {
   const totalTimeRef = useRef(0);
@@ -21,12 +22,15 @@ export default function Pomodoro() {
   const [sessionType, setSessionType] = useState("")
   const [showCancelWindow, setShowCancelWindow] = useState(false)
   const {user, userSessions, setUserSessions} = useUser();
+  const {addAchievementToUser} = useAchievements()
   const [isSessionsVisible, setIsSessionsVisible] = useState(true)
   const [isMounted, setIsMounted] = useState(false);
   const [showExtraTimeText, setShowExtraTimeText] = useState("")
   const [showRemainingTime, setShowRemainingTime] = useState(true);
   const [taskList, setTaskList] = useState<{id: number, text: string}[]>([]);
+  const isSessionCancelledRef = useRef(false);
   const completedTasks = useRef(0);
+
 
   useEffect(() => {
     setIsMounted(true);
@@ -68,6 +72,9 @@ export default function Pomodoro() {
         
         if(sessionData.success){
           toast.success("Successfully added the new Session!")
+          if(isSessionCancelledRef.current){
+            addAchievementToUser(user.userName, "Early Bird")
+          }
           //Hämta sessions
           try{
             const userSessionResponse = await fetch(`http://localhost:5239/api/Session/getSessionsByUsername/${user.userName}`, {
@@ -75,6 +82,8 @@ export default function Pomodoro() {
             })
             const userSessionData = await userSessionResponse.json()
             setUserSessions(userSessionData)
+            console.log(isSessionCancelledRef.current);
+            
           }
           catch(error){
             if (error instanceof Error) {
@@ -153,6 +162,7 @@ export default function Pomodoro() {
     workedTimeRef.current = 0
     totalTimeRef.current = 0
     setIsPomodoro(true)
+    isSessionCancelledRef.current = false;
     setSessionType(payload.type as string)
 
     setTimer(pomodoroLength);
@@ -163,8 +173,6 @@ export default function Pomodoro() {
       .split(":")
       .map(Number);
 
-      
-    
     
     const [preferedBreakhours, preferedBreakminutes, preferedBreakseconds] =
       user.preferredBreak.split(":").map(Number);
@@ -178,6 +186,14 @@ export default function Pomodoro() {
       preferedBreakseconds;
 
       const time_per_setting = calculateExtraTime(totalTime)
+
+    
+      if(totalTimeRef.current < preferedTimeSeconds){
+        setPomodoroLength(totalTimeRef.current)
+        setBreakLength(0)
+        setTimerIsActive(true)
+        return
+      }
 
 
     if (user.algoritmsetting === "longer_break") {
@@ -211,7 +227,7 @@ export default function Pomodoro() {
     )}
 
   }
-  const calculateExtraTime = (totalTime: string) => {
+  const calculateExtraTime = (totalTime: string) => {    
 
     if(user){
     const [totalhours, totalminutes, totalseconds] = totalTime
@@ -234,19 +250,21 @@ export default function Pomodoro() {
     const [preferedBreakhours, preferedBreakminutes, preferedBreakseconds] =
       user.preferredBreak.split(":").map(Number);
 
-    let preferedTimeSeconds =
+    const preferedTimeSeconds =
       preferedhours * 3600 + preferedminutes * 60 + preferedseconds;    
 
-      let preferedBreakSeconds =
+      const preferedBreakSeconds =
       preferedBreakhours * 3600 +
       preferedBreakminutes * 60 +
       preferedBreakseconds;
 
       if(totalTimeSeconds < preferedTimeSeconds){        
-        preferedTimeSeconds = totalTimeSeconds
-        preferedBreakSeconds = 0
+        return 0
       }
     
+      
+      
+
 
     const cycle_length = preferedBreakSeconds + preferedTimeSeconds;
     
@@ -262,6 +280,7 @@ export default function Pomodoro() {
     
 
     const time_per_setting = rest_time / amount_of_cycles;
+    
     return(time_per_setting)
     }
     
@@ -326,7 +345,7 @@ export default function Pomodoro() {
       <div className="col-span-3 flex flex-col items-center md:pb-8 md:h-full mt-20 overflow-y-auto">
         {timerIsActive ? (
           <div>
-          {showCancelWindow && <ConfirmCancel setShowCancelWindow={setShowCancelWindow} handleSuccesfullSession={handleSuccesfullSession}/>}
+          {showCancelWindow && <ConfirmCancel setShowCancelWindow={setShowCancelWindow} handleSuccesfullSession={handleSuccesfullSession} isSessionRef={isSessionCancelledRef}/>}
            <div className="flex flex-col items-center gap-10">
              <div className="flex items-center gap-3">{showRemainingTime ? (<><h2>Total Time: {formatTime(totalTimeRef.current)}</h2> <span onClick={() => setShowRemainingTime(false)}><Ban className="text-red-500 cursor-pointer"/></span></>) : <h2 onClick={() => setShowRemainingTime(true)} className="cursor-pointer">Show remaining time</h2>} </div>
             <div className="flex flex-col items-center gap-5">

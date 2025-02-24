@@ -30,5 +30,18 @@ public class AchievementController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    
+
+    [HttpPost("AddAchievementToUser")]
+    public async Task<IActionResult> AddAchievementToUser(string userName, string achievementTitle)
+    {
+        try
+        {
+            await _achievementRepository.AddAchievementToUser(userName, achievementTitle);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

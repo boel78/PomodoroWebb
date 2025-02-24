@@ -28,7 +28,7 @@ export default function Profile() {
                     headers: {
                         'Content-Type': 'application/json',
                       },
-                      body: JSON.stringify({ UserName: payload.userName, newPassword: payload.newPassword, currentPassword: payload.currentPassword, newEmail: payload.newEmail, newAlgorithm: payload.newAlgorithm, didInitialSetup: false }),
+                      body: JSON.stringify({ UserName: payload.userName, newPassword: payload.newPassword, currentPassword: payload.currentPassword, newEmail: payload.newEmail, newAlgorithm: payload.newAlgorithm, didInitialSetup: false, preferredTime: payload.preferredTime, preferredBreak: payload.preferredBreak }),
             })
             const data = await response.json()
 

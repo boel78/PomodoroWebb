@@ -26,7 +26,7 @@ export default function Register(){
                     headers: {
                         'Content-Type': 'application/json',
                       },
-                      body: JSON.stringify({ userName: payload.username, password: payload.password, email: payload.email }),
+                      body: JSON.stringify({ userName: payload.username, password: payload.password, email: payload.email, preferredTime: payload.preferredTime, preferredBreak: payload.preferredBreak}),
                 })
                 const data = await response.json();
 

@@ -3,12 +3,14 @@ import { Button } from "./ui/button";
 type ConfirmCancelProps = {
     setShowCancelWindow:(state: boolean) => void
     handleSuccesfullSession:() => void
+    isSessionRef: React.MutableRefObject<boolean>
   }
 
-export default function ConfirmCancel({setShowCancelWindow, handleSuccesfullSession}: ConfirmCancelProps){
+export default function ConfirmCancel({setShowCancelWindow, handleSuccesfullSession, isSessionRef}: ConfirmCancelProps){
     const handleCancel = () => {
         handleSuccesfullSession()
         setShowCancelWindow(false)
+        isSessionRef.current = true
     }
     return(
         <div className="absolute z-20 left-0 md:left-1/2 px-4 bg-white h-1/4 md:h-1/3 flex flex-col items-center gap-12 md:gap-20 shadow-md pt-4">

@@ -202,8 +202,8 @@ public class UserRepository : IUserRepository
        
        //Byta PrefferedTime
        if (!vm.PreferredTime.IsNullOrEmpty())
-       {
-           
+       {    
+           Console.WriteLine("Byt time");
            user.PreferredPomodoro = TimeOnly.Parse(vm.PreferredTime);
            context.Update(user);
            await context.SaveChangesAsync();
