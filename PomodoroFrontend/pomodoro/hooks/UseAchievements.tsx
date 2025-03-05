@@ -40,7 +40,7 @@ const useAchievements = () => {
     const addAchievementToUser = async (achievementTitle: string) => {
         let aid = 0
         try{
-            const response = await fetch(`http://localhost:5239/api/Achievement/GetByName/${achievementTitle}`, {
+            const response = await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Achievement/GetByName/${achievementTitle}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const useAchievements = () => {
         try{
             console.log(user?.userName, achievementTitle);
             
-            await fetch(`http://localhost:5239/api/Achievement/AddAchievementToUser?userName=${user?.userName}&achievementTitle=${achievementTitle}`,{
+            await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Achievement/AddAchievementToUser?userName=${user?.userName}&achievementTitle=${achievementTitle}`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

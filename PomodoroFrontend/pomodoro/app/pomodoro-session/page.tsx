@@ -59,7 +59,7 @@ export default function Pomodoro() {
       if (user) {
         try {
           const response = await fetch(
-            "http://localhost:5239/api/Session/addSession",
+            "https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/addSession",
             {
               method: "POST",
               headers: {
@@ -80,7 +80,7 @@ export default function Pomodoro() {
             //Hämta sessions
             try {
               const userSessionResponse = await fetch(
-                `http://localhost:5239
+                `https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net
 /api/Session/getSessionsByUsername/${user.userName}`,
                 {
                   method: "GET",
