@@ -20,6 +20,13 @@ public class AchievementRepository : IAchievementRepository
         return achievements;
     }
 
+    public async Task<Achievement> GetByName(string name)
+    {
+        var achievement = await _context.Achievements.Include(a => a.UserAchievements).Where(a => a.Title == name)
+            .FirstOrDefaultAsync();
+        return achievement;
+    }
+
     public async Task AddAchievementToUser(string userName, string achievementTitle)
     {
         var achievement = await _context.Achievements.Where(a => a.Title == achievementTitle).FirstOrDefaultAsync();

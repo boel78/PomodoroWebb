@@ -59,7 +59,7 @@ export default function Pomodoro() {
       if (user) {
         try {
           const response = await fetch(
-            "https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net/api/Session/addSession",
+            "http://localhost:5239/api/Session/addSession",
             {
               method: "POST",
               headers: {
@@ -80,7 +80,7 @@ export default function Pomodoro() {
             //Hämta sessions
             try {
               const userSessionResponse = await fetch(
-                `https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net
+                `http://localhost:5239
 /api/Session/getSessionsByUsername/${user.userName}`,
                 {
                   method: "GET",
@@ -282,12 +282,13 @@ export default function Pomodoro() {
         userSessions &&
         userSessions.length === 1
       ) {
-        addAchievementToUser(user.userName, "First Timer");
+        addAchievementToUser("First Timer");
       }
       //pomodoro pro
       if (userSessions && userSessions.length >= 10) {
-        addAchievementToUser(user.userName, "Pomodoro Pro");
+        addAchievementToUser("Pomodoro Pro");
       }
+      //Marathon Mind
     }
   }, [userSessions]);
 

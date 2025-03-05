@@ -1,4 +1,19 @@
 import { useState, useEffect } from 'react';
+import { useUser } from '../context/UserContext';
+
+
+
+interface UserAchievement {
+    userId: string;
+    achievementId: number;
+    progress: number;
+}
+
+interface User {
+    id: string;
+    userName: string;
+    userAchievements: UserAchievement[];
+}
 
 interface Achievement {
     id: number;
@@ -8,6 +23,7 @@ interface Achievement {
 }
 
 const useAchievements = () => {
+    const { setUser, user } = useUser();
     const [achievements, setAchievements] = useState<Achievement[]>([]);
 
     useEffect(() => {
@@ -21,17 +37,36 @@ const useAchievements = () => {
         fetchAchievements();
     }, []);
 
-    const addAchievementToUser = async (userName: string, achievementTitle: string) => {
+    const addAchievementToUser = async (achievementTitle: string) => {
+        let aid = 0
         try{
-            console.log(userName, achievementTitle);
+            const response = await fetch(`http://localhost:5239/api/Achievement/GetByName/${achievementTitle}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+
+            console.log(response);
             
-            await fetch(`https://pomodoro-a7ehd9geebhtg9d0.centralus-01.azurewebsites.net
-/api/Achievement/AddAchievementToUser?userName=${userName}&achievementTitle=${achievementTitle}`,{
+        } catch (error){
+            console.log(error);    
+        }
+
+        try{
+            console.log(user?.userName, achievementTitle);
+            
+            await fetch(`http://localhost:5239/api/Achievement/AddAchievementToUser?userName=${user?.userName}&achievementTitle=${achievementTitle}`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
             })
+            
+            /*if (user) {
+                
+                setUser({ ...user, userAchievements: [...user.userAchievements, { userId: user.id, achievementId: 2, progress: 100 }] });
+            }*/
         }
         catch(error){
             if (error instanceof Error) {

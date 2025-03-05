@@ -31,6 +31,20 @@ public class AchievementController : ControllerBase
         }
     }
 
+    [HttpGet("GetByName/{name}")]
+    public async Task<IActionResult> GetAchievementByName(string name)
+    {
+        try
+        {
+            var achievement = await _achievementRepository.GetByName(name);
+            return Ok(achievement);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpPost("AddAchievementToUser")]
     public async Task<IActionResult> AddAchievementToUser(string userName, string achievementTitle)
     {
