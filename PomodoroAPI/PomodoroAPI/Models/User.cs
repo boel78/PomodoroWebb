@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
+using MongoDB.EntityFrameworkCore;
 
 namespace PomodoroAPI.Models;
 
+[Collection("Users")]
 public partial class User : IdentityUser
 {
     public int? Streak { get; set; }

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using MongoDB.Bson;
+using MongoDB.EntityFrameworkCore;
 
 namespace PomodoroAPI.Models;
 
+[Collection("Achievements")]
 public partial class Achievement
 {
-    public int Aid { get; set; }
+    public ObjectId Aid { get; set; }
 
     public string? Title { get; set; }
 

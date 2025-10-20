@@ -8,7 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<PomodoroContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection")));
+
+var mongoDBSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>();
+builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDBSettings"));
+builder.Services.AddDbContext<PomodoroContext>(options =>
+    options.UseMongoDB(mongoDBSettings.AtlasURI ?? "", mongoDBSettings.DatabaseName ?? ""));
 builder.Services.AddControllers();
 
 
@@ -26,6 +30,8 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
+
+
 
 var app = builder.Build();
 
